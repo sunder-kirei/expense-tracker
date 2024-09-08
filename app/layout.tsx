@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { HorizontalNav } from "@/components/layout/nav/HorizontalNav";
+import { Page } from "@/components/layout/Page";
+import { VerticalNav } from "@/components/layout/nav/VerticalNav";
+import { Separator } from "@/components/ui/separator";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,11 +28,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full flex flex-col`}
       >
-        {children}
+        <HorizontalNav />
+        <Separator className="h-[1px] bg-foreground/30" />
+        <main className="flex h-full w-full p-4 gap-x-4 overflow-hidden">
+          <VerticalNav />
+          <Page>{children}</Page>
+        </main>
       </body>
     </html>
   );
