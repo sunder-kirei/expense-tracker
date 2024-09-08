@@ -9,6 +9,52 @@ generator client {
     previewFeatures = ["driverAdapters"]
 }
 
+model Transaction {
+    id            String          @id @default(cuid())
+    title         String
+    amount        Int
+    payee         String
+    notes         String?
+    date          DateTime
+    type          TransactionType @default(CASH)
+    user          User            @relation(fields: [userId], references: [id])
+    userId        String
+    bankAccount   BankAccount     @relation(fields: [bankAccountId], references: [id])
+    bankAccountId String
+    category      Category        @relation(fields: [categoryId], references: [id])
+    categoryId    String
+}
+
+enum TransactionType {
+    CASH
+    CARD
+    UPI
+}
+
+model Category {
+    id          String        @id @default(cuid())
+    name        String
+    user        User          @relation(fields: [userId], references: [id])
+    userId      String
+    Transaction Transaction[]
+}
+
+model BankAccount {
+    id            String          @id @default(cuid())
+    accountName   String
+    accountType   BankAccountType @default(DEBIT)
+    accountNumber String?
+    accountLogo   String          @default("/default-bank-account.svg")
+    user          User            @relation(fields: [userId], references: [id])
+    userId        String
+    Transaction   Transaction[]
+}
+
+enum BankAccountType {
+    DEBIT
+    CREDIT
+}
+
 model User {
     id            String          @id @default(cuid())
     name          String?
@@ -20,8 +66,11 @@ model User {
     // Optional for WebAuthn support
     Authenticator Authenticator[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    Transaction Transaction[]
+    BankAccount BankAccount[]
+    Category    Category[]
 }
 
 model Account {

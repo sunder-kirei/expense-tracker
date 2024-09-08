@@ -23,13 +23,14 @@ export function Path({ className, ...props }: HTMLAttributes<HTMLElement>) {
         {pathSansRoot?.map((pathPart, idx) => (
           <React.Fragment key={pathPart}>
             <BreadcrumbItem>
+              <BreadcrumbSeparator />
               <BreadcrumbLink
                 href={"/" + pathSansRoot.slice(0, idx + 1).join("/")}
+                className="text-foreground font-semibold hover:text-primary"
               >
                 {pathPart}
               </BreadcrumbLink>
             </BreadcrumbItem>
-            {idx < pathSansRoot.length - 1 && <BreadcrumbSeparator />}
           </React.Fragment>
         ))}
       </BreadcrumbList>

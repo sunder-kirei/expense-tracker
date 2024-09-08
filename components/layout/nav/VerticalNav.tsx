@@ -5,6 +5,8 @@ import {
   Library,
   ChartNoAxesCombined,
   UsersRound,
+  BadgeIndianRupee,
+  Landmark,
 } from "lucide-react";
 import Link from "next/link";
 import { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
@@ -18,24 +20,19 @@ export function VerticalNav({
   return (
     <nav className={twMerge("sm:flex flex-col hidden", className)} {...props}>
       {/* show summary of all projects issue assigned to me and all projects issues in total, recently opened, analytics */}
-      <NavTile href="/">
+      <NavTile href="/home">
         <House className="nav-tile__leading" />
         Home
       </NavTile>
       {/* Table of all the issues in the selected project */}
-      <NavTile href="/issues">
-        <Bug className="nav-tile__leading" />
-        Issues
+      <NavTile href="/transactions">
+        <BadgeIndianRupee className="nav-tile__leading" />
+        Transactions
       </NavTile>
       {/* drag-n-drop interface for your issues to change issue status */}
-      <NavTile href="/kanban">
-        <Kanban className="nav-tile__leading" />
-        Kanban
-      </NavTile>
-      {/* list all projects with their overview */}
-      <NavTile href="/projects">
-        <Library className="nav-tile__leading" />
-        Projects
+      <NavTile href="/accounts">
+        <Landmark className="nav-tile__leading" />
+        Accounts
       </NavTile>
       {/* charts for everything */}
       <NavTile href="/analytics">
@@ -45,7 +42,7 @@ export function VerticalNav({
       {/* people tab */}
       <NavTile href="/people">
         <UsersRound className="nav-tile__leading" />
-        People
+        Profile
       </NavTile>
     </nav>
   );
