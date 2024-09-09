@@ -6,6 +6,8 @@ export const PostAccountSchema = z.object({
   accountType: z.enum(["DEBIT", "CREDIT"]),
   accountNumber: z.optional(z.string()),
   accountLogo: z.optional(z.string()),
+  isPrimary: z.optional(z.boolean()),
+  bankName: z.string(),
 });
 
 export type PostAccountInterface = z.infer<typeof PostAccountSchema>;

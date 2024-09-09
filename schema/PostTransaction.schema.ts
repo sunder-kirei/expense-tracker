@@ -2,9 +2,8 @@ import { title } from "process";
 import { z } from "zod";
 
 export const PostTransactionSchema = z.object({
-  title: z.string(),
-  amount: z.number(),
-  payee: z.string(),
+  amount: z.coerce.number(),
+  payee: z.string().min(1, { message: "Payee is required" }),
   notes: z.optional(z.string()),
   date: z.coerce.date(),
   bankAccountId: z.string(),

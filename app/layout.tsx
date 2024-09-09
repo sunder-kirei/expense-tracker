@@ -5,6 +5,7 @@ import { HorizontalNav } from "@/components/layout/nav/HorizontalNav";
 import { Page } from "@/components/layout/Page";
 import { VerticalNav } from "@/components/layout/nav/VerticalNav";
 import { Separator } from "@/components/ui/separator";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen w-full flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen overflow-hidden w-full flex flex-col`}
       >
         <HorizontalNav />
         <Separator className="h-[1px] bg-foreground/30" />
@@ -38,6 +39,7 @@ export default function RootLayout({
           <VerticalNav />
           <Page>{children}</Page>
         </main>
+        <Toaster richColors closeButton />
       </body>
     </html>
   );

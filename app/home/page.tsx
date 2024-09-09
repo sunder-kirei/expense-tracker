@@ -1,5 +1,5 @@
 import Image from "next/image";
 
 export default function Home() {
-  return <section>Hello world</section>;
+  return <section className="h-full w-full">Hello world</section>;
 }

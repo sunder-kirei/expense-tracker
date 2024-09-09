@@ -9,6 +9,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import React from "react";
@@ -22,15 +23,25 @@ export function Path({ className, ...props }: HTMLAttributes<HTMLElement>) {
       <BreadcrumbList>
         {pathSansRoot?.map((pathPart, idx) => (
           <React.Fragment key={pathPart}>
-            <BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbLink
-                href={"/" + pathSansRoot.slice(0, idx + 1).join("/")}
-                className="text-foreground font-semibold hover:text-primary"
-              >
-                {pathPart}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
+            {idx === pathSansRoot.length - 1 ? (
+              <BreadcrumbItem>
+                <BreadcrumbPage className="font-semibold text-primary">
+                  {pathPart}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            ) : (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink
+                    href={"/" + pathSansRoot.slice(0, idx + 1).join("/")}
+                    className="text-foreground hover:text-primary"
+                  >
+                    {pathPart}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+              </>
+            )}
           </React.Fragment>
         ))}
       </BreadcrumbList>

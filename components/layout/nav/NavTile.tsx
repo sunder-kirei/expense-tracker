@@ -20,7 +20,7 @@ function NavTile({
       {...props}
       className={twMerge(
         "flex p-4 gap-x-4 w-48 rounded-lg font-semibold",
-        path === props.href ? "bg-muted text-muted-foreground" : "",
+        path.includes(props.href) ? "bg-muted text-muted-foreground" : "",
         className
       )}
     />
