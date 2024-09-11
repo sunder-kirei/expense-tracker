@@ -1,32 +1,20 @@
 "use client";
 
-import * as React from "react";
 import {
   ColumnDef,
-  ColumnFiltersState,
   SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import * as React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -36,8 +24,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "./DataTablePagination";
-import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { DataTableViewOptions } from "./DataTableViewOptions";
+import useConfirm from "@/hooks/useConfirm";
 
 interface Props<T> {
   columns: ColumnDef<T>[];
@@ -49,6 +37,11 @@ export function DataTable<T>({ data, columns: propCols }: Props<T>) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  const [Dialog, confirm] = useConfirm({
+    title: "Are you sure?",
+    message: "This action cannot be undone!",
+  });
 
   const columns: ColumnDef<T>[] = [
     {
@@ -92,15 +85,19 @@ export function DataTable<T>({ data, columns: propCols }: Props<T>) {
     },
   });
 
-  function handleDelete() {}
+  async function handleDelete() {
+    const res = await confirm();
+  }
 
   return (
     <div className="w-full">
+      <Dialog />
       <div className="flex items-center justify-end gap-x-4 py-4">
         <Button
           variant="outline"
           size="sm"
           className="hidden h-8 lg:flex text-red-500"
+          onClick={handleDelete}
         >
           <Trash2 className="mr-2 h-4 w-4" />
           Delete

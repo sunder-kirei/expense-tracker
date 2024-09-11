@@ -1,11 +1,12 @@
+import { HorizontalNav } from "@/components/layout/nav/HorizontalNav";
+import { VerticalNav } from "@/components/layout/nav/VerticalNav";
+import { Page } from "@/components/layout/Page";
+import { Separator } from "@/components/ui/separator";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { HorizontalNav } from "@/components/layout/nav/HorizontalNav";
-import { Page } from "@/components/layout/Page";
-import { VerticalNav } from "@/components/layout/nav/VerticalNav";
-import { Separator } from "@/components/ui/separator";
-import { Toaster } from "@/components/ui/sonner";
+import ProviderLayout from "@/components/layout/ProviderLayout";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,17 +31,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen overflow-hidden w-full flex flex-col`}
-      >
-        <HorizontalNav />
-        <Separator className="h-[1px] bg-foreground/30" />
-        <main className="flex h-full w-full p-4 gap-x-4 overflow-hidden">
-          <VerticalNav />
-          <Page>{children}</Page>
-        </main>
-        <Toaster richColors closeButton />
-      </body>
+      <head>
+        <link rel="icon" href="/icon.svg" type="image/svg" />
+      </head>
+      <ProviderLayout>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen overflow-hidden w-full flex flex-col`}
+        >
+          <HorizontalNav />
+          <Separator className="h-[1px] bg-foreground/30" />
+          <main className="flex h-full w-full p-4 gap-x-4 overflow-hidden">
+            <VerticalNav />
+            <Page>{children}</Page>
+          </main>
+          <Toaster richColors closeButton />
+        </body>
+      </ProviderLayout>
     </html>
   );
 }

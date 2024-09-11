@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -10,7 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;

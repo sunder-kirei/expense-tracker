@@ -6,9 +6,9 @@ const getAccount = Prisma.validator<Prisma.BankAccountDefaultArgs>()({
     accountName: true,
     accountType: true,
     accountNumber: true,
-    accountLogo: true,
     userId: true,
     bankName: true,
+    isPrimary: true,
   },
 });
 
@@ -18,8 +18,8 @@ const postAccount = Prisma.validator<Prisma.BankAccountDefaultArgs>()({
     accountName: true,
     accountType: true,
     accountNumber: true,
-    accountLogo: true,
     userId: true,
+    isPrimary: true,
   },
 });
 

@@ -8,7 +8,7 @@ export const PostTransactionSchema = z.object({
   date: z.coerce.date(),
   bankAccountId: z.string(),
   type: z.enum(["CASH", "CARD", "UPI"]),
-  categoryId: z.string(),
+  categoryId: z.optional(z.string()),
 });
 
 export type PostTransactionInterface = z.infer<typeof PostTransactionSchema>;

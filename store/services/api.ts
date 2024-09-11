@@ -1,6 +1,13 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Prisma } from "@prisma/client";
+import { DeleteAccountInterface } from "@/schema/DeleteAccount.schema";
+import { DeleteCategoryInterface } from "@/schema/DeleteCategory.schema";
+import { DeleteTransactionInterface } from "@/schema/DeleteTransaction.schema";
+import { PatchUserInterface } from "@/schema/PatchUser.schema";
+import { PostAccountInterface } from "@/schema/PostAccount.schema";
+import { PostCategoryInterface } from "@/schema/PostCategory.schema";
+import { PostTransactionInterface } from "@/schema/PostTransaction.schema";
+import { PutAccountInterface } from "@/schema/PutAccount.schema";
 import {
+  AccountExpenseSummary,
   DeleteAccount,
   DeleteCategory,
   DeleteTransaction,
@@ -8,27 +15,32 @@ import {
   GetCategory,
   GetTransaction,
   GetUser,
+  PatchUser,
   PostAccount,
   PostCategory,
   PostTransaction,
 } from "@/types";
-import { PostAccountInterface } from "@/schema/PostAccount.schema";
-import { PostTransactionInterface } from "@/schema/PostTransaction.schema";
-import { PostCategoryInterface } from "@/schema/PostCategory.schema";
-import { DeleteCategoryInterface } from "@/schema/DeleteCategory.schema";
-import { DeleteAccountInterface } from "@/schema/DeleteAccount.schema";
-import { DeleteTransactionInterface } from "@/schema/DeleteTransaction.schema";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "/api",
     credentials: "include",
   }),
-  tagTypes: ["categories", "accounts", "transactions"],
+  tagTypes: ["categories", "accounts", "transactions", "user"],
   endpoints: (builder) => ({
     // /api/user
     getUser: builder.query<GetUser, void>({
       query: () => ({ url: "/user", method: "GET" }),
+      providesTags: ["user"],
+    }),
+    patchUser: builder.mutation<PatchUser, PatchUserInterface>({
+      query: (body) => ({
+        url: "/user",
+        method: "PATCH",
+        body: body,
+      }),
+      invalidatesTags: ["user"],
     }),
 
     // /api/accounts
@@ -52,6 +64,14 @@ const api = createApi({
       query: (body) => ({
         url: "/accounts",
         method: "DELETE",
+        body: body,
+      }),
+      invalidatesTags: ["accounts"],
+    }),
+    putAccount: builder.mutation<PostAccount, PutAccountInterface>({
+      query: (body) => ({
+        url: "/accounts",
+        method: "PUT",
         body: body,
       }),
       invalidatesTags: ["accounts"],
@@ -120,6 +140,16 @@ const api = createApi({
       }),
       invalidatesTags: ["categories"],
     }),
+
+    // get accounts summary
+    getAccountsSummary: builder.query<AccountExpenseSummary[], void>({
+      query: () => ({ url: "/accounts/summary", method: "GET" }),
+      transformResponse: (res, meta, arg) => {
+        const response = res as any;
+        return response.data;
+      },
+      providesTags: () => ["accounts"],
+    }),
   }),
 });
 
@@ -130,8 +160,11 @@ export const {
   useGetAccountsQuery,
   useGetCategoriesQuery,
   useGetTransactionsQuery,
+  useGetAccountsSummaryQuery,
   usePostAccountMutation,
   usePostCategoryMutation,
   usePostTransactionMutation,
   useDeleteCategoryMutation,
+  usePutAccountMutation,
+  usePatchUserMutation,
 } = api;

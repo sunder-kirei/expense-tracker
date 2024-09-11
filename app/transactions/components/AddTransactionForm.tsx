@@ -32,16 +32,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import {
   PostTransactionInterface,
@@ -62,17 +54,14 @@ import {
   Check,
   ChevronsUpDown,
   CreditCard,
-  Loader2,
   LoaderCircle,
   QrCode,
-  Trash,
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import CreatableSelect from "react-select/creatable";
 import { toast } from "sonner";
 
 export function AddTransactionForm() {
@@ -125,7 +114,7 @@ export function AddTransactionForm() {
       postTransaction({
         amount,
         bankAccountId,
-        categoryId,
+        categoryId: categoryId === "" ? undefined : categoryId,
         date,
         payee,
         type,
@@ -391,7 +380,6 @@ export function AddTransactionForm() {
                                   className="text-red-500 ml-auto cursor-pointer"
                                   onClick={() => {
                                     form.setValue("categoryId", "");
-
                                     handleDeleteCategory(category.id);
                                   }}
                                 />

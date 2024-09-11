@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/prisma";
 import { DeleteCategorySchema } from "@/schema/DeleteCategory.schema";
-import { PostAccountSchema } from "@/schema/PostAccount.schema";
 import { PostCategorySchema } from "@/schema/PostCategory.schema";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";

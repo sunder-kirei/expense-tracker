@@ -1,18 +1,18 @@
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon,
 } from "@radix-ui/react-icons";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Table } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;

@@ -3,7 +3,7 @@ import { prisma } from "@/prisma";
 import { DeleteTransactionSchema } from "@/schema/DeleteTransaction.schema";
 import { PostTransactionSchema } from "@/schema/PostTransaction.schema";
 import { NextRequest, NextResponse } from "next/server";
-import { z, ZodError } from "zod";
+import { ZodError } from "zod";
 
 export async function GET() {
   try {
@@ -52,16 +52,8 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const {
-      amount,
-      bankAccountId,
-      categoryId,
-      date,
-      payee,
-
-      type,
-      notes,
-    } = PostTransactionSchema.parse(await req.json());
+    const { amount, bankAccountId, categoryId, date, payee, type, notes } =
+      PostTransactionSchema.parse(await req.json());
     const session = await auth();
     if (!session) {
       return NextResponse.json(
@@ -89,7 +81,7 @@ export async function POST(req: NextRequest) {
       where: { id: categoryId },
     });
 
-    if (!category) {
+    if (categoryId && !category) {
       return NextResponse.json(
         {
           error: "Category does not exist.",

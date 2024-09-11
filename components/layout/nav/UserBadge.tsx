@@ -4,11 +4,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
+import UserAvatar from "./UserAvatar";
 
 export async function UserBadge() {
   const session = await auth();
@@ -16,15 +16,10 @@ export async function UserBadge() {
   return session ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="border cursor-pointer">
-          <AvatarImage src={session.user?.image ?? undefined} />
-          <AvatarFallback className="uppercase">
-            {session.user?.name
-              ?.split(" ")
-              ?.map((seg) => seg[0])
-              .join("")}
-          </AvatarFallback>
-        </Avatar>
+        <UserAvatar
+          userImage={session.user?.image ?? undefined}
+          username={session.user?.name ?? undefined}
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-fit">
         <DropdownMenuItem>

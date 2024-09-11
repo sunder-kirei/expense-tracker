@@ -1,15 +1,11 @@
 import {
-  House,
-  Bug,
-  Kanban,
-  Library,
-  ChartNoAxesCombined,
-  UsersRound,
   BadgeIndianRupee,
+  ChartNoAxesCombined,
+  House,
   Landmark,
+  UsersRound,
 } from "lucide-react";
-import Link from "next/link";
-import { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
+import { HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 import NavTile from "./NavTile";
 
@@ -40,7 +36,7 @@ export function VerticalNav({
         Analytics
       </NavTile>
       {/* people tab */}
-      <NavTile href="/people">
+      <NavTile href="/profile">
         <UsersRound className="nav-tile__leading" />
         Profile
       </NavTile>

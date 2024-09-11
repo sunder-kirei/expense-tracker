@@ -2,8 +2,6 @@
 
 import { usePathname } from "next/navigation";
 
-import { HTMLAttributes } from "react";
-import { twMerge } from "tailwind-merge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,7 +10,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import React from "react";
+import React, { HTMLAttributes } from "react";
+import { twMerge } from "tailwind-merge";
 
 export function Path({ className, ...props }: HTMLAttributes<HTMLElement>) {
   const path = usePathname();

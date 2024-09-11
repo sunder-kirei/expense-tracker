@@ -7,9 +7,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 
 import { useState } from "react";
 
@@ -18,7 +16,13 @@ interface Props {
   message: string;
 }
 
-const useConfirm = ({ title, message }: Props) => {
+const useConfirm = ({
+  title,
+  message,
+}: Props): [
+  ConfirmationDialog: () => JSX.Element,
+  confirm: () => Promise<boolean>
+] => {
   const [promise, setPromise] = useState<{
     resolve: (value: boolean) => void;
   } | null>(null);

@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/prisma";
 import { DeleteAccountSchema } from "@/schema/DeleteAccount.schema";
 import { PostAccountSchema } from "@/schema/PostAccount.schema";
+import { PutAccountSchema } from "@/schema/PutAccount.schema";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -48,14 +49,8 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const {
-      accountName,
-      accountType,
-      accountLogo,
-      accountNumber,
-      isPrimary,
-      bankName,
-    } = PostAccountSchema.parse(await req.json());
+    const { accountName, accountType, accountNumber, isPrimary, bankName } =
+      PostAccountSchema.parse(await req.json());
     const session = await auth();
     if (!session) {
       return NextResponse.json(
@@ -98,7 +93,6 @@ export async function POST(req: NextRequest) {
     const createdAcc = await prisma.bankAccount.create({
       data: {
         accountName,
-        accountLogo,
         accountNumber,
         accountType,
         userId: user.id,
@@ -173,6 +167,84 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ ...deletedAccount }, { status: 202 });
   } catch (err: any) {
     console.log(err);
+    if (err instanceof ZodError) {
+      return NextResponse.json(
+        {
+          error: err.message,
+        },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json(
+      {
+        error: err.toString(),
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const {
+      accountName,
+      accountType,
+      accountNumber,
+      isPrimary,
+      bankName,
+      accountId,
+    } = PutAccountSchema.parse(await req.json());
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        { status: 401 }
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: session.user?.email ?? undefined },
+      include: { BankAccount: true },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        { status: 401 }
+      );
+    }
+
+    const foundAccount = user.BankAccount.find((a) => a.id === accountId);
+
+    if (!foundAccount) {
+      return NextResponse.json(
+        {
+          error: "Account does not exist.",
+        },
+        { status: 404 }
+      );
+    }
+
+    const createdAcc = await prisma.bankAccount.update({
+      where: {
+        id: accountId,
+      },
+      data: {
+        accountName,
+        accountNumber,
+        accountType,
+        userId: user.id,
+        isPrimary,
+        bankName,
+      },
+    });
+
+    return NextResponse.json({ ...createdAcc }, { status: 201 });
+  } catch (err: any) {
     if (err instanceof ZodError) {
       return NextResponse.json(
         {
