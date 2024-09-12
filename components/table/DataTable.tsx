@@ -2,6 +2,7 @@
 
 import {
   ColumnDef,
+  RowModel,
   SortingState,
   VisibilityState,
   flexRender,
@@ -10,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Trash2 } from "lucide-react";
+import { Edit2, MoreHorizontal, Trash2 } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -26,13 +27,27 @@ import {
 import { DataTablePagination } from "./DataTablePagination";
 import { DataTableViewOptions } from "./DataTableViewOptions";
 import useConfirm from "@/hooks/useConfirm";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+} from "../ui/dropdown-menu";
+import Link from "next/link";
 
 interface Props<T> {
   columns: ColumnDef<T>[];
   data: T[];
+  handleDelete: (rows: RowModel<T>) => void;
 }
 
-export function DataTable<T>({ data, columns: propCols }: Props<T>) {
+export function DataTable<T>({
+  data,
+  columns: propCols,
+  handleDelete,
+}: Props<T>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -85,8 +100,9 @@ export function DataTable<T>({ data, columns: propCols }: Props<T>) {
     },
   });
 
-  async function handleDelete() {
+  async function _handleDelete() {
     const res = await confirm();
+    handleDelete(table.getSelectedRowModel());
   }
 
   return (
@@ -96,8 +112,8 @@ export function DataTable<T>({ data, columns: propCols }: Props<T>) {
         <Button
           variant="outline"
           size="sm"
-          className="hidden h-8 lg:flex text-red-500"
-          onClick={handleDelete}
+          className="h-8 flex text-red-500"
+          onClick={_handleDelete}
         >
           <Trash2 className="mr-2 h-4 w-4" />
           Delete

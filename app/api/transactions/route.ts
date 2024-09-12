@@ -77,17 +77,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const category = await prisma.category.findUnique({
-      where: { id: categoryId },
-    });
+    if (categoryId) {
+      const category = await prisma.category.findUnique({
+        where: { id: categoryId },
+      });
 
-    if (categoryId && !category) {
-      return NextResponse.json(
-        {
-          error: "Category does not exist.",
-        },
-        { status: 400 }
-      );
+      if (!category) {
+        return NextResponse.json(
+          {
+            error: "Category does not exist.",
+          },
+          { status: 400 }
+        );
+      }
     }
 
     const account = await prisma.bankAccount.findUnique({
@@ -130,6 +132,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    console.log(err);
     return NextResponse.json(
       {
         error: err.toString(),
@@ -141,8 +144,7 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const { id } = DeleteTransactionSchema.parse(await req.json());
-    console.log(id);
+    const { ids } = DeleteTransactionSchema.parse(await req.json());
     const session = await auth();
     if (!session) {
       return NextResponse.json(
@@ -155,7 +157,6 @@ export async function DELETE(req: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { email: session.user?.email ?? undefined },
-      include: { Transaction: true },
     });
 
     if (!user) {
@@ -167,19 +168,11 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const foundTrx = user.Transaction.find((c) => c.id === id);
-    if (!foundTrx) {
-      return NextResponse.json(
-        {
-          error: "Transaction does not exist.",
-        },
-        { status: 404 }
-      );
-    }
-
-    const deletedTransaction = await prisma.transaction.delete({
+    const deletedTransaction = await prisma.transaction.deleteMany({
       where: {
-        id,
+        id: {
+          in: ids,
+        },
       },
     });
 

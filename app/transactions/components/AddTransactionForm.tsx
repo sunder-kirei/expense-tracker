@@ -167,7 +167,10 @@ export function AddTransactionForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 p-4 overflow-y-auto scrollbar-thin"
+      >
         <FormField
           control={form.control}
           name="payee"

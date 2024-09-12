@@ -30,13 +30,8 @@ export function VerticalNav({
         <Landmark className="nav-tile__leading" />
         Accounts
       </NavTile>
-      {/* charts for everything */}
-      <NavTile href="/analytics">
-        <ChartNoAxesCombined className="nav-tile__leading" />
-        Analytics
-      </NavTile>
       {/* people tab */}
-      <NavTile href="/profile">
+      <NavTile href="/profile" className="mt-auto">
         <UsersRound className="nav-tile__leading" />
         Profile
       </NavTile>

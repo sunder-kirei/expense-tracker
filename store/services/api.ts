@@ -1,3 +1,4 @@
+import { TrxSummaryInterface } from "@/schema/api/TrxSummary.schema";
 import { DeleteAccountInterface } from "@/schema/DeleteAccount.schema";
 import { DeleteCategoryInterface } from "@/schema/DeleteCategory.schema";
 import { DeleteTransactionInterface } from "@/schema/DeleteTransaction.schema";
@@ -8,6 +9,7 @@ import { PostTransactionInterface } from "@/schema/PostTransaction.schema";
 import { PutAccountInterface } from "@/schema/PutAccount.schema";
 import {
   AccountExpenseSummary,
+  CategorySummary,
   DeleteAccount,
   DeleteCategory,
   DeleteTransaction,
@@ -19,7 +21,9 @@ import {
   PostAccount,
   PostCategory,
   PostTransaction,
+  TrxSummary,
 } from "@/types";
+import { Transaction } from "@prisma/client";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const api = createApi({
@@ -93,15 +97,21 @@ const api = createApi({
       PostTransaction,
       PostTransactionInterface
     >({
-      query: (body) => ({
-        url: "/transactions",
-        method: "POST",
-        body: body,
-      }),
+      query: (body) => {
+        body.date.setUTCHours(0, 0, 0, 0);
+        return {
+          url: "/transactions",
+          method: "POST",
+          body: {
+            ...body,
+            date: body.date.toUTCString(),
+          },
+        };
+      },
       invalidatesTags: ["transactions"],
     }),
-    deleteTransaction: builder.mutation<
-      DeleteTransaction,
+    deleteTransactions: builder.mutation<
+      DeleteTransaction[],
       DeleteTransactionInterface
     >({
       query: (body) => ({
@@ -141,7 +151,7 @@ const api = createApi({
       invalidatesTags: ["categories"],
     }),
 
-    // get accounts summary
+    // get summary
     getAccountsSummary: builder.query<AccountExpenseSummary[], void>({
       query: () => ({ url: "/accounts/summary", method: "GET" }),
       transformResponse: (res, meta, arg) => {
@@ -149,6 +159,36 @@ const api = createApi({
         return response.data;
       },
       providesTags: () => ["accounts"],
+    }),
+    getCategoriesSummary: builder.query<CategorySummary[], TrxSummaryInterface>(
+      {
+        query: ({ period }) => ({
+          url: "/categories/summary",
+          method: "GET",
+          params: period && {
+            period: period,
+          },
+        }),
+        transformResponse: (res, meta, arg) => {
+          const response = res as any;
+          return response.data;
+        },
+        providesTags: () => ["categories"],
+      }
+    ),
+    getTransactionsSummary: builder.query<TrxSummary[], TrxSummaryInterface>({
+      query: ({ period }) => ({
+        url: `/transactions/summary`,
+        method: "GET",
+        params: period && {
+          period: period,
+        },
+      }),
+      transformResponse: (res, meta, arg) => {
+        const response = res as any;
+        return response.data;
+      },
+      providesTags: () => ["transactions"],
     }),
   }),
 });
@@ -160,11 +200,14 @@ export const {
   useGetAccountsQuery,
   useGetCategoriesQuery,
   useGetTransactionsQuery,
-  useGetAccountsSummaryQuery,
   usePostAccountMutation,
   usePostCategoryMutation,
   usePostTransactionMutation,
+  useDeleteTransactionsMutation,
   useDeleteCategoryMutation,
   usePutAccountMutation,
   usePatchUserMutation,
+  useGetAccountsSummaryQuery,
+  useGetCategoriesSummaryQuery,
+  useGetTransactionsSummaryQuery,
 } = api;

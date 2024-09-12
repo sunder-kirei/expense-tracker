@@ -26,12 +26,6 @@ body {
   }
 } */
 
-.custom-grid {
-  @apply grid gap-2 p-4 justify-start;
-  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
-  grid-template-rows: max-content;
-}
-
 .select_icon {
   @apply flex items-center gap-x-2;
 }

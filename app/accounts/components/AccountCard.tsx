@@ -27,7 +27,7 @@ export function AccountCard({
   >;
 }) {
   return (
-    <Card className="w-auto h-fit">
+    <Card className="w-full max-w-[500px] h-fit">
       <CardHeader className="flex flex-row gap-x-4 items-center">
         <Landmark size={36} />
         <div className="flex flex-col">

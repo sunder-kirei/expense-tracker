@@ -71,44 +71,37 @@ export default function AccountsPage() {
     });
   }
 
-  return (
-    <>
-      {accountLoading || userLoading ? (
-        <Loader />
-      ) : selectedAccount !== undefined ? (
-        <Dialog
-          open={selectedAccount !== undefined}
-          onOpenChange={(value) => {
-            if (!value) setSelectedAccount(undefined);
-          }}
-        >
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Edit Account</DialogTitle>
-            </DialogHeader>
-            <AccountForm onSubmit={onSubmit} account={selectedAccount} />
-          </DialogContent>
-        </Dialog>
-      ) : (
-        <div className="w-full h-full custom-grid overflow-y-auto scrollbar-thin">
-          {accounts?.map((account) => (
-            <AccountCard
-              {...account}
-              locale={user!.locale}
-              setSelectedAccount={setSelectedAccount}
-            />
-          ))}
-        </div>
-      )}
-      <Link href="/accounts/new" className="z-100">
-        <Button
-          variant="outline"
-          className="absolute bottom-8 right-8 flex gap-x-2"
-        >
+  return accountLoading || userLoading ? (
+    <Loader />
+  ) : selectedAccount !== undefined ? (
+    <Dialog
+      open={selectedAccount !== undefined}
+      onOpenChange={(value) => {
+        if (!value) setSelectedAccount(undefined);
+      }}
+    >
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Edit Account</DialogTitle>
+        </DialogHeader>
+        <AccountForm onSubmit={onSubmit} account={selectedAccount} />
+      </DialogContent>
+    </Dialog>
+  ) : (
+    <div className="w-full h-full overflow-y-auto scrollbar-thin flex flex-col lg:flex-row gap-2">
+      {accounts?.map((account) => (
+        <AccountCard
+          {...account}
+          locale={user!.locale}
+          setSelectedAccount={setSelectedAccount}
+        />
+      ))}
+      <Link href="/accounts/new" className="z-100 absolute bottom-8 right-8">
+        <Button variant="outline" className="flex gap-x-2">
           <Plus />
           <span className="hidden sm:inline">Add account</span>
         </Button>
       </Link>
-    </>
+    </div>
   );
 }

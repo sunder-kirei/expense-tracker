@@ -5,17 +5,24 @@ import { Loader } from "@/components/layout/Loader";
 import { DataTable } from "@/components/table/DataTable";
 import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader";
 import { cn } from "@/lib/utils";
-import { useGetTransactionsQuery, useGetUserQuery } from "@/store/services/api";
+import {
+  useDeleteTransactionsMutation,
+  useGetTransactionsQuery,
+  useGetUserQuery,
+} from "@/store/services/api";
 import { GetTransaction } from "@/types";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, RowModel } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
 import { getAllInfoByISO } from "iso-country-currency";
 import { Banknote, CreditCard, Loader2, QrCode } from "lucide-react";
 import CurrencyInput from "react-currency-input-field";
+import { toast } from "sonner";
 
 export function TransactionTable() {
   const { data, isLoading } = useGetTransactionsQuery();
   const { data: user, isLoading: userLoading } = useGetUserQuery();
+  const [deleteQuery, { isLoading: deleteLoading }] =
+    useDeleteTransactionsMutation();
 
   const columns: ColumnDef<GetTransaction>[] = [
     {
@@ -39,7 +46,9 @@ export function TransactionTable() {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Category" />
       ),
-      cell: ({ row }) => <div>{row.original.category.name}</div>,
+      cell: ({ row }) => (
+        <div>{row.original.category?.name ?? "Uncategorized"}</div>
+      ),
       enableSorting: false,
     },
     {
@@ -80,14 +89,14 @@ export function TransactionTable() {
         <DataTableColumnHeader column={column} title="Amount" />
       ),
       cell: ({ row }) => (
-        <div className={cn("flex items-center gap-x-2 w-fit")}>
+        <div className={cn("flex items-center gap-x-2 w-20")}>
           <div className="text-xl">
             {getAllInfoByISO(user?.locale ?? "IN").symbol}
           </div>
           <CurrencyInput
             value={row.original.amount}
             disabled
-            className="disabled:bg-transparent w-fit"
+            className="disabled:bg-transparent"
           />
         </div>
       ),
@@ -103,9 +112,22 @@ export function TransactionTable() {
     },
   ];
 
-  return isLoading || userLoading ? (
+  function handleDelete(rows: RowModel<GetTransaction>) {
+    const ids = rows.rows.map((row) => row.original.id);
+    toast.promise(deleteQuery({ ids }).unwrap(), {
+      loading: "Deleting transactions...",
+      success: () => "Deleted transactions😎",
+      error: () => "Something went wrong🥲",
+    });
+  }
+
+  return isLoading || userLoading || deleteLoading ? (
     <Loader />
   ) : (
-    <DataTable<GetTransaction> columns={columns} data={data ?? []} />
+    <DataTable<GetTransaction>
+      columns={columns}
+      data={data ?? []}
+      handleDelete={handleDelete}
+    />
   );
 }

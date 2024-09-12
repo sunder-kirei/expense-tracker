@@ -10,7 +10,7 @@ export function Page({
   return (
     <section
       className={twMerge(
-        "h-full w-full flex flex-col overflow-auto scrollbar-thin scrollbar-track-background scrollbar-thumb-border scrollbar-thumb-rounded-full",
+        "h-full w-full flex flex-col overflow-hidden scrollbar-thin scrollbar-track-background scrollbar-thumb-border scrollbar-thumb-rounded-full",
         className
       )}
       {...props}
