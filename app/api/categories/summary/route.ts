@@ -32,7 +32,8 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-    const data = await categorySummary(user, period || user.period);
+    const data = await categorySummary(user, period.period || user.period);
+
     return NextResponse.json(
       {
         data,

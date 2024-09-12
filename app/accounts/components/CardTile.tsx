@@ -34,7 +34,7 @@ export function CardTile({ locale, variant, ...account }: Props) {
       <div className={cn(cardVariants({ variant }))}>
         <div className="text-xl">{getAllInfoByISO(locale).symbol}</div>
         <CurrencyInput
-          value={account[variant ?? "income"]}
+          value={account[variant ?? "income"].valueOf()}
           disabled
           className="disabled:bg-transparent w-full"
         />
