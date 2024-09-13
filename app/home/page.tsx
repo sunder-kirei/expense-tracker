@@ -42,6 +42,7 @@ import {
   Radar,
 } from "lucide-react";
 import { AppRadarChart } from "./components/categoryChart/AppRadarChart";
+import { NoData } from "@/components/NoData";
 
 export default function Home() {
   const [period, setPeriod] = useState<TrxSummaryInterface>({
@@ -207,7 +208,9 @@ export default function Home() {
             </SelectContent>
           </Select>
           <div className="chart w-full h-[600px] lg:h-[300px]">
-            {catGraph.type === "pie" ? (
+            {category?.length === 0 ? (
+              <NoData />
+            ) : catGraph.type === "pie" ? (
               <AppPieChart
                 categories={category}
                 loading={categoryLoading || userLoading}

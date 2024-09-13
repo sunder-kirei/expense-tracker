@@ -13,7 +13,9 @@ import UserAvatar from "./UserAvatar";
 export async function UserBadge() {
   const session = await auth();
 
-  return session ? (
+  if (!session) return null;
+
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <UserAvatar
@@ -28,7 +30,5 @@ export async function UserBadge() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  ) : (
-    <Link href="/api/auth/signin">Sign in</Link>
   );
 }

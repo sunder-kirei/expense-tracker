@@ -46,6 +46,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { AccountForm } from "./components/AccountForm";
 import { toast } from "sonner";
+import { NoData } from "@/components/NoData";
 
 export default function AccountsPage() {
   const { data: accounts, isLoading: accountLoading } =
@@ -89,6 +90,7 @@ export default function AccountsPage() {
     </Dialog>
   ) : (
     <div className="w-full h-full overflow-y-auto scrollbar-thin flex flex-col lg:flex-row gap-2">
+      {accounts?.length === 0 && <NoData className="max-w-[500px] h-56" />}
       {accounts?.map((account) => (
         <AccountCard
           {...account}
