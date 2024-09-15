@@ -1,4 +1,4 @@
-import { SummaryInterface } from "@/schema/api/Summary.schema";
+import { SummaryInterface } from "@/schema/api/TrxSummary.schema";
 import { DeleteAccountInterface } from "@/schema/DeleteAccount.schema";
 import { DeleteCategoryInterface } from "@/schema/DeleteCategory.schema";
 import { DeleteTransactionInterface } from "@/schema/DeleteTransaction.schema";

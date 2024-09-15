@@ -12,7 +12,6 @@ export interface CategorySummary extends Partial<GetCategory> {
   count: Number;
   income: Number;
   expense: Number;
-  fill: string;
 }
 
 export interface TrxSummary {

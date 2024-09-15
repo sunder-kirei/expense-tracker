@@ -36,14 +36,11 @@ export default function RootLayout({
       </head>
       <ProviderLayout>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen overflow-hidden w-full flex flex-col`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased w-full`}
         >
-          <HorizontalNav />
-          <Separator className="h-[1px] bg-foreground/30" />
-          <main className="flex h-full w-full p-4 gap-x-4 overflow-hidden">
-            <VerticalNav />
-            <Page>{children}</Page>
-          </main>
+          <VerticalNav className="fixed h-full sm:pt-20 pb-4 pl-2 w-48 bg-background" />
+          <HorizontalNav className="sm:fixed border-b h-16 z-100 bg-background" />
+          {children}
           <Toaster richColors closeButton />
         </body>
       </ProviderLayout>

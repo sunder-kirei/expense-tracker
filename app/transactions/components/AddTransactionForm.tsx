@@ -192,7 +192,7 @@ export function AddTransactionForm() {
             </FormItem>
           )}
         />
-        <div className="flex items-start gap-x-8">
+        <div className="flex flex-col lg:flex-row lg:items-start gap-4">
           <FormField
             control={form.control}
             name="amount"
@@ -266,7 +266,7 @@ export function AddTransactionForm() {
           />
         </div>
 
-        <div className="flex items-start gap-x-8">
+        <div className="flex lg:flex-row flex-col lg:items-start gap-4">
           <FormField
             control={form.control}
             name="type"

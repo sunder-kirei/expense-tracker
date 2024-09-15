@@ -41,7 +41,11 @@ export function DataTable<T>({
 }: Props<T>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>({
+      bankAccount: false,
+      mode: false,
+      category: false,
+    });
   const [rowSelection, setRowSelection] = React.useState({});
 
   const [Dialog, confirm] = useConfirm({
@@ -106,6 +110,7 @@ export function DataTable<T>({
           variant="outline"
           size="sm"
           className="h-8 flex text-red-500"
+          disabled={table.getSelectedRowModel().rows.length === 0}
           onClick={_handleDelete}
         >
           <Trash2 className="mr-2 h-4 w-4" />

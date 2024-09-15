@@ -1,7 +1,7 @@
 import { getAllInfoByISO } from "iso-country-currency";
 
 export function CustomTooltip(props: any) {
-  const { active, payload, label, locale } = props;
+  const { active, payload, label, locale, x2Label, x1Label } = props;
 
   const { symbol } = getAllInfoByISO(locale);
 
@@ -11,12 +11,12 @@ export function CustomTooltip(props: any) {
         <div className="text-primary font-semibold">{label}</div>
         <div className="flex flex-col gap-y-1">
           <div className="flex gap-x-1">
-            <span style={{ color: payload[1].color }}>Net income:</span>
+            <span style={{ color: payload[1].color }}>{x2Label}</span>
             {symbol}
             {payload[1].value}
           </div>
           <div className="flex gap-x-1">
-            <span style={{ color: payload[0].color }}>Net expense:</span>
+            <span style={{ color: payload[0].color }}>{x1Label}</span>
             {symbol}
             {payload[0].value}
           </div>

@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { transactionSummary } from "@/lib/api/summary";
 import { prisma } from "@/prisma";
-import { SummarySchema } from "@/schema/api/Summary.schema";
+import { SummarySchema } from "@/schema/api/TrxSummary.schema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {

@@ -25,6 +25,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AccountCard } from "./components/AccountCard";
 import { AccountForm } from "./components/AccountForm";
+import { Page } from "@/components/layout/Page";
 
 const defaultFrom = new Date();
 defaultFrom.setDate(1);
@@ -76,58 +77,61 @@ export default function AccountsPage() {
     }
   }
 
-  return accountLoading || userLoading ? (
-    <Loader />
-  ) : selectedAccount !== undefined ? (
-    <Dialog
-      open={selectedAccount !== undefined}
-      onOpenChange={(value) => {
-        if (!value) setSelectedAccount(undefined);
-      }}
-    >
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Edit Account</DialogTitle>
-        </DialogHeader>
-        <AccountForm onSubmit={onSubmit} account={selectedAccount} />
-      </DialogContent>
-    </Dialog>
-  ) : (
-    <>
+  return (
+    <Page>
       <ConfirmDialog />
-      <div className="flex flex-col h-full w-full overflow-auto lg:overflow-y-hidden scrollbar-thin gap-4">
-        <RangeDatePicker
-          from={from}
-          to={to}
-          setFromDate={(val) => {
-            if (val) setFrom(val);
+
+      {selectedAccount !== undefined && (
+        <Dialog
+          open={selectedAccount !== undefined}
+          onOpenChange={(value) => {
+            if (!value) setSelectedAccount(undefined);
           }}
-          setToDate={(val) => {
-            if (val) setTo(val);
-          }}
-        />
-        <div className="w-full h-full overflow-y-auto scrollbar-thin flex flex-col lg:flex-row gap-2">
-          {accounts?.length === 0 && <NoData className="max-w-[500px] h-56" />}
-          {accounts?.map((account) => (
-            <AccountCard
-              key={account.id}
-              {...account}
-              locale={user!.locale}
-              setSelectedAccount={setSelectedAccount}
-              onDelete={onDelete}
-            />
-          ))}
-          <Link
-            href="/accounts/new"
-            className="z-100 absolute bottom-8 right-8"
-          >
-            <Button variant="outline" className="flex gap-x-2">
-              <Plus />
-              <span className="hidden sm:inline">Add account</span>
-            </Button>
-          </Link>
+        >
+          <DialogContent title="edit account" className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Edit Account</DialogTitle>
+            </DialogHeader>
+            <AccountForm onSubmit={onSubmit} account={selectedAccount} />
+          </DialogContent>
+        </Dialog>
+      )}
+      {accountLoading || userLoading ? (
+        <Loader />
+      ) : (
+        <div className="flex flex-col h-full w-full gap-4">
+          <RangeDatePicker
+            from={from}
+            to={to}
+            setFromDate={(val) => {
+              if (val) setFrom(val);
+            }}
+            setToDate={(val) => {
+              if (val) setTo(val);
+            }}
+          />
+          <div className="w-full h-full overflow-y-auto scrollbar-thin flex flex-col lg:flex-row gap-2">
+            {accounts?.length === 0 && (
+              <NoData className="max-w-[500px] h-56" />
+            )}
+            {accounts?.map((account) => (
+              <AccountCard
+                key={account.id}
+                {...account}
+                locale={user!.locale}
+                setSelectedAccount={setSelectedAccount}
+                onDelete={onDelete}
+              />
+            ))}
+            <Link href="/accounts/new" className="z-100 fixed bottom-8 right-8">
+              <Button variant="outline" className="flex gap-x-2">
+                <Plus />
+                <span className="hidden sm:inline">Add account</span>
+              </Button>
+            </Link>
+          </div>
         </div>
-      </div>
-    </>
+      )}
+    </Page>
   );
 }

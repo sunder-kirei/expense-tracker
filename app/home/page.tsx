@@ -24,11 +24,12 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { CardTile } from "./components/CardTile";
-import { AppPieChart } from "./components/categoryChart/AppPieChart";
-import { AppRadarChart } from "./components/categoryChart/AppRadarChart";
-import { AppAreaChart } from "./components/trxChart/AppAreaChart";
-import { AppBarChart } from "./components/trxChart/AppBarChart";
-import { AppLineChart } from "./components/trxChart/AppLineChart";
+import { AppAreaChart } from "./components/charts/AppAreaChart";
+import { AppBarChart } from "./components/charts/AppBarChart";
+import { AppLineChart } from "./components/charts/AppLineChart";
+import { Page } from "@/components/layout/Page";
+import { format } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const defaultFrom = new Date();
 defaultFrom.setDate(1);
@@ -40,8 +41,8 @@ export default function Home() {
   const [trxGraph, setTrxGraph] = useState<{ type: "bar" | "line" | "area" }>({
     type: "area",
   });
-  const [catGraph, setCatGraph] = useState<{ type: "pie" | "radar" }>({
-    type: "pie",
+  const [catGraph, setCatGraph] = useState<{ type: "bar" | "line" | "area" }>({
+    type: "bar",
   });
   const { data: trx, isFetching: trxLoading } = useGetTransactionsSummaryQuery({
     from,
@@ -59,7 +60,7 @@ export default function Home() {
   const expense = trx?.reduce((a, t) => (a += t.expense.valueOf()), 0);
 
   return (
-    <div className="flex flex-col h-full w-full overflow-auto lg:overflow-y-hidden scrollbar-thin gap-2 px-4">
+    <Page className="gap-4">
       <RangeDatePicker
         from={from}
         to={to}
@@ -69,8 +70,9 @@ export default function Home() {
         setToDate={(val) => {
           if (val) setTo(val);
         }}
+        className="mb-2 -mt-4"
+        disabled={categoryLoading || trxLoading || userLoading}
       />
-
       <div className="w-full flex flex-col lg:h-52 lg:flex-row gap-2 items-center">
         <CardTile
           data={net?.toString()}
@@ -97,8 +99,8 @@ export default function Home() {
           loading={trxLoading || userLoading}
         />
       </div>
-      <div className="w-full h-full p-2 flex flex-col lg:flex-row gap-4">
-        <div className="w-full flex flex-col items-end gap-y-1 h-full overflow-hidden">
+      <div className="w-full h-full flex flex-col lg:flex-row gap-4">
+        <div className="w-full flex flex-col items-end gap-2 h-full overflow-hidden">
           <Select
             defaultValue={trxGraph.type}
             onValueChange={(value) =>
@@ -132,33 +134,50 @@ export default function Home() {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <div className="chart w-full h-[600px] lg:h-full">
-            {trxGraph.type === "area" ? (
-              <AppAreaChart
-                trx={trx}
-                user={user}
-                loading={trxLoading || userLoading}
-              />
-            ) : trxGraph.type === "bar" ? (
-              <AppBarChart
-                trx={trx}
-                user={user}
-                loading={trxLoading || userLoading}
-              />
-            ) : (
-              <AppLineChart
-                trx={trx}
-                user={user}
-                loading={trxLoading || userLoading}
-              />
-            )}
-          </div>
+          {trxGraph.type === "area" ? (
+            <AppAreaChart
+              data={trx}
+              user={user}
+              loading={trxLoading || userLoading}
+              x2="income"
+              x1="expense"
+              x2Label="Net income:"
+              x1Label="Net expense:"
+              xAxis={(props) => format(props.date, "dd/MM/yy")}
+            />
+          ) : trxGraph.type === "bar" ? (
+            <AppBarChart
+              data={trx}
+              user={user}
+              loading={trxLoading || userLoading}
+              x2="income"
+              x1="expense"
+              x2Label="Net income:"
+              x1Label="Net expense:"
+              xAxis={(props) => format(props.date, "dd/MM/yy")}
+            />
+          ) : (
+            <AppLineChart
+              data={trx}
+              user={user}
+              loading={trxLoading || userLoading}
+              x2="income"
+              x1="expense"
+              x2Label="Net income:"
+              x1Label="Net expense:"
+              xAxis={(props) => format(props.date, "dd/MM/yy")}
+            />
+          )}
+
+          {(trxLoading || userLoading) && (
+            <Skeleton className="w-full h-full aspect-square" />
+          )}
         </div>
-        <div className="w-full flex flex-col items-end gap-y-1 h-full overflow-hidden">
+        <div className="w-full flex flex-col items-end gap-2 h-full overflow-hidden">
           <Select
             defaultValue={catGraph.type}
             onValueChange={(value) =>
-              setCatGraph({ type: value as "pie" | "radar" })
+              setCatGraph({ type: value as "bar" | "line" | "area" })
             }
             disabled={categoryLoading || userLoading}
           >
@@ -167,40 +186,68 @@ export default function Home() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="pie">
+                <SelectItem value="bar">
                   <div className="select_icon">
-                    <ChartPie />
-                    Pie
+                    <ChartColumn />
+                    Bar
                   </div>
                 </SelectItem>
-                <SelectItem value="radar">
+                <SelectItem value="line">
                   <div className="select_icon">
-                    <Radar />
-                    Radar
+                    <ChartSpline />
+                    Line
+                  </div>
+                </SelectItem>
+                <SelectItem value="area">
+                  <div className="select_icon">
+                    <ChartArea />
+                    Area
                   </div>
                 </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
-          <div className="chart w-full h-[600px] lg:h-[300px]">
-            {category?.length === 0 ? (
-              <NoData />
-            ) : catGraph.type === "pie" ? (
-              <AppPieChart
-                categories={category}
-                loading={categoryLoading || userLoading}
-                user={user}
-              />
-            ) : (
-              <AppRadarChart
-                categories={category}
-                loading={categoryLoading || userLoading}
-                user={user}
-              />
-            )}
-          </div>
+          {category?.length === 0 ? (
+            <NoData />
+          ) : catGraph.type === "area" ? (
+            <AppAreaChart
+              data={category}
+              user={user}
+              loading={categoryLoading || userLoading}
+              x2="income"
+              x1="expense"
+              x2Label="Net income:"
+              x1Label="Net expense:"
+              xAxis="name"
+            />
+          ) : catGraph.type === "bar" ? (
+            <AppBarChart
+              data={category}
+              user={user}
+              loading={categoryLoading || userLoading}
+              x2="income"
+              x1="expense"
+              x2Label="Net income:"
+              x1Label="Net expense:"
+              xAxis="name"
+            />
+          ) : (
+            <AppLineChart
+              data={category}
+              user={user}
+              loading={categoryLoading || userLoading}
+              x2="income"
+              x1="expense"
+              x2Label="Net income:"
+              x1Label="Net expense:"
+              xAxis="name"
+            />
+          )}
+          {(categoryLoading || userLoading) && (
+            <Skeleton className="w-full h-full aspect-square" />
+          )}
         </div>
       </div>
-    </div>
+    </Page>
   );
 }

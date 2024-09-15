@@ -12,17 +12,34 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { SelectSingleEventHandler } from "react-day-picker";
+import { HTMLAttributes } from "react";
+import { twMerge } from "tailwind-merge";
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLElement> {
   from: Date;
   to: Date;
   setFromDate: SelectSingleEventHandler;
   setToDate: SelectSingleEventHandler;
+  disabled?: boolean;
 }
 
-export function RangeDatePicker({ from, to, setFromDate, setToDate }: Props) {
+export function RangeDatePicker({
+  from,
+  to,
+  setFromDate,
+  setToDate,
+  className,
+  disabled = false,
+  ...props
+}: Props) {
   return (
-    <div className="flex flex-row gap-2 items-center justify-center lg:justify-end">
+    <div
+      className={twMerge(
+        "flex flex-row gap-1 items-center justify-center md:justify-end",
+        className
+      )}
+      {...props}
+    >
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -31,9 +48,10 @@ export function RangeDatePicker({ from, to, setFromDate, setToDate }: Props) {
               "w-fit justify-start text-left font-normal",
               !from && "text-muted-foreground"
             )}
+            disabled={disabled}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {from ? format(from, "PPP") : <span>Pick a date</span>}
+            <span>{from ? format(from, "P") : "Pick a date"}</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
@@ -42,6 +60,7 @@ export function RangeDatePicker({ from, to, setFromDate, setToDate }: Props) {
             selected={from}
             onSelect={setFromDate}
             initialFocus
+            disabled={disabled}
           />
         </PopoverContent>
       </Popover>
@@ -54,9 +73,10 @@ export function RangeDatePicker({ from, to, setFromDate, setToDate }: Props) {
               "w-fit justify-start text-left font-normal",
               !to && "text-muted-foreground"
             )}
+            disabled={disabled}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {to ? format(to, "PPP") : <span>Pick a date</span>}
+            <span>{to ? format(to, "P") : "Pick a date"}</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
@@ -65,6 +85,7 @@ export function RangeDatePicker({ from, to, setFromDate, setToDate }: Props) {
             selected={to}
             onSelect={setToDate}
             initialFocus
+            disabled={disabled}
           />
         </PopoverContent>
       </Popover>

@@ -3,6 +3,7 @@
 import { Loader } from "@/components/layout/Loader";
 import { DataTable } from "@/components/table/DataTable";
 import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import {
   useDeleteTransactionsMutation,
@@ -121,7 +122,13 @@ export function TransactionTable() {
   }
 
   return isLoading || userLoading || deleteLoading ? (
-    <Loader />
+    <div className="w-full flex flex-col items-end gap-y-4">
+      <div className="flex gap-x-4 items-center">
+        <Skeleton className="w-24 h-10 " />
+        <Skeleton className="w-24 h-10 " />
+      </div>
+      <Skeleton className="w-full h-64" />
+    </div>
   ) : (
     <DataTable<GetTransaction>
       columns={columns}

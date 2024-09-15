@@ -12,14 +12,14 @@ export async function HorizontalNav({
   return (
     <nav
       className={twMerge(
-        "flex justify-between w-full py-4 px-8 text-xl h-16",
+        "flex justify-between w-full py-4 px-4 text-xl items-center",
         className
       )}
       {...props}
     >
-      <div className="flex gap-x-4 items-center">
+      <div className="flex gap-x-2 items-center">
         <Drawer />
-        <Link href="/home" className="flex items-center gap-x-4">
+        <Link href="/home" className="flex items-center gap-x-2">
           <svg
             id="logo-70"
             width="78"

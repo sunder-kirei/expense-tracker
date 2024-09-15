@@ -13,17 +13,33 @@ import {
   YAxis,
 } from "recharts";
 import { CustomTooltip } from "./CustomTooltip";
+import { twMerge } from "tailwind-merge";
 
-export function AppAreaChart({ trx, user, loading }: ChartTrxProps) {
-  return trx && user && !loading ? (
-    <ResponsiveContainer className="w-full h-full">
+export function AppAreaChart({
+  data,
+  user,
+  loading,
+  className,
+  x1,
+  xAxis,
+  x2,
+  yAxis,
+  x1Label,
+  x2Label,
+  ...props
+}: ChartTrxProps) {
+  return data && user && !loading ? (
+    <ResponsiveContainer
+      className={twMerge("w-full h-full aspect-square", className?.toString())}
+      {...props}
+    >
       <AreaChart
-        data={trx}
+        data={data}
         margin={{
-          top: 45,
+          top: 40,
           right: 30,
-          left: 20,
-          bottom: 5,
+          left: 0,
+          bottom: 0,
         }}
       >
         <defs>
@@ -36,27 +52,32 @@ export function AppAreaChart({ trx, user, loading }: ChartTrxProps) {
             <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
           </linearGradient>{" "}
         </defs>
-        <XAxis dataKey={(props) => format(props.date, "dd/MM/yy")} />
-        <YAxis />
+        <XAxis dataKey={xAxis} />
+        <YAxis dataKey={yAxis} />
         <Tooltip
-          content={(props) => <CustomTooltip {...props} locale={user.locale} />}
+          content={(props) => (
+            <CustomTooltip
+              {...props}
+              x1Label={x1Label}
+              x2Label={x2Label}
+              locale={user.locale}
+            />
+          )}
         />
         <Legend />
         <Area
           type="monotone"
-          dataKey="expense"
+          dataKey={x1}
           stroke="#8884d8"
           fill="#8884d8"
           stackId="1"
-          label="Expense"
         />
         <Area
           type="monotone"
-          dataKey="income"
+          dataKey={x2}
           stroke="#82ca9d"
           fill="#82ca9d"
           stackId="1"
-          label="Income"
         />
       </AreaChart>
     </ResponsiveContainer>

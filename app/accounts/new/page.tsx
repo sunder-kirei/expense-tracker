@@ -5,6 +5,7 @@ import { usePostAccountMutation } from "@/store/services/api";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AccountForm } from "../components/AccountForm";
+import { Page } from "@/components/layout/Page";
 
 export default function NewTransactionPage() {
   const router = useRouter();
@@ -23,8 +24,8 @@ export default function NewTransactionPage() {
     });
   }
   return (
-    <div className="h-full w-full overflow-y-auto scrollbar-thin p-4">
+    <Page>
       <AccountForm onSubmit={onSubmit} />
-    </div>
+    </Page>
   );
 }

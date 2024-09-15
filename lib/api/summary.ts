@@ -5,6 +5,7 @@ import { normalizeDate } from "../date";
 import { generateRandomColor } from "../generateColor";
 
 export async function accountSummary(user: User, from: Date, to: Date) {
+  to.setDate(to.getDate() + 1);
   from = normalizeDate(from);
   to = normalizeDate(to);
 
@@ -64,6 +65,7 @@ export async function accountSummary(user: User, from: Date, to: Date) {
 }
 
 export async function categorySummary(user: User, from: Date, to: Date) {
+  to.setDate(to.getDate() + 1);
   from = normalizeDate(from);
   to = normalizeDate(to);
 
@@ -90,12 +92,11 @@ export async function categorySummary(user: User, from: Date, to: Date) {
 
   const data: CategorySummary[] = (queryResult as any).map((item: any) => ({
     id: item.id ?? undefined,
-    name: item.name ?? undefined,
+    name: item.name ?? "Uncategorized",
     userId: item.userId ?? undefined,
     count: Number(item.count),
     income: Number(item.income),
     expense: Number(item.expense),
-    fill: generateRandomColor(),
   }));
 
   return data;
@@ -115,6 +116,7 @@ function comp(a: Date, b: Date) {
 }
 
 export async function transactionSummary(user: User, from: Date, to: Date) {
+  to.setDate(to.getDate() + 1);
   from = normalizeDate(from);
   to = normalizeDate(to);
 

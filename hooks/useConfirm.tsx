@@ -49,7 +49,10 @@ const useConfirm = ({
   const ConfirmationDialog = () => {
     return (
       <AlertDialog open={promise !== null}>
-        <AlertDialogContent>
+        <AlertDialogContent
+          title="confirmation dialog"
+          className="w-72 max-w-[90%] rounded-md"
+        >
           <AlertDialogHeader>
             <AlertDialogTitle>{title}</AlertDialogTitle>
             <AlertDialogDescription>{message}</AlertDialogDescription>
