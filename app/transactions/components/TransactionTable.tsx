@@ -16,6 +16,7 @@ import { getAllInfoByISO } from "iso-country-currency";
 import { Banknote, CreditCard, QrCode } from "lucide-react";
 import CurrencyInput from "react-currency-input-field";
 import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 export function TransactionTable() {
   const { data, isLoading } = useGetTransactionsQuery();
@@ -88,14 +89,19 @@ export function TransactionTable() {
         <DataTableColumnHeader column={column} title="Amount" />
       ),
       cell: ({ row }) => (
-        <div className={cn("flex items-center gap-x-2 w-20")}>
+        <div
+          className={cn(
+            "flex items-center gap-x-2 w-20",
+            row.original.amount > 0 ? "text-green-400" : "text-red-400"
+          )}
+        >
           <div className="text-xl">
             {getAllInfoByISO(user?.locale ?? "IN").symbol}
           </div>
           <CurrencyInput
             value={row.original.amount}
             disabled
-            className="disabled:bg-transparent"
+            className={twMerge("disabled:bg-transparent")}
           />
         </div>
       ),

@@ -37,6 +37,9 @@ export async function GET() {
         category: true,
         bankAccount: true,
       },
+      orderBy: {
+        date: "desc",
+      },
     });
 
     return NextResponse.json({ transactions }, { status: 200 });

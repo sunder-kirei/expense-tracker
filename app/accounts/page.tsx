@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader } from "@/components/layout/Loader";
+import { Page } from "@/components/layout/Page";
 import { NoData } from "@/components/NoData";
 import { RangeDatePicker } from "@/components/RangeDatePicker";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import useConfirm from "@/hooks/useConfirm";
 import { PostAccountInterface } from "@/schema/PostAccount.schema";
 import {
@@ -25,8 +26,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AccountCard } from "./components/AccountCard";
 import { AccountForm } from "./components/AccountForm";
-import { Page } from "@/components/layout/Page";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const defaultFrom = new Date();
 defaultFrom.setDate(1);
@@ -128,7 +127,10 @@ export default function AccountsPage() {
               />
             ))}
             <Link href="/accounts/new" className="z-100 fixed bottom-8 right-8">
-              <Button variant="outline" className="flex gap-x-2">
+              <Button
+                variant="outline"
+                className="flex gap-x-2 ring ring-primary"
+              >
                 <Plus />
                 <span className="hidden sm:inline">Add account</span>
               </Button>

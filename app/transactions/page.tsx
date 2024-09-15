@@ -11,7 +11,7 @@ export default function TransactionsPage() {
       <Link href="/transactions/new">
         <Button
           variant="outline"
-          className="fixed bottom-8 right-8 flex gap-x-2"
+          className="fixed bottom-8 right-8 flex gap-x-2 ring ring-primary"
         >
           <Plus />
           <span className="hidden sm:inline">Create Transaction</span>

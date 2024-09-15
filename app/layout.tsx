@@ -34,7 +34,7 @@ export default function RootLayout({
       </head>
       <ProviderLayout>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased w-full max-w-screen-xl mx-auto`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased w-full max-w-screen-2xl mx-auto`}
         >
           <VerticalNav className="fixed h-full sm:pt-20 pb-4 pl-2 w-48 bg-background" />
           <HorizontalNav className="sm:fixed border-b h-16 z-100 bg-background" />

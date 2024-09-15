@@ -35,6 +35,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
+import useConfirm from "@/hooks/useConfirm";
 import { cn } from "@/lib/utils";
 import {
   PostTransactionInterface,
@@ -79,6 +80,14 @@ export function AddTransactionForm() {
   const router = useRouter();
 
   const [createCategory, setCreateCategory] = useState("");
+  const [catOpen, setCatOpen] = useState(false);
+  const [calOpen, setCalOpen] = useState(false);
+
+  const [ConfirmDialog, confirm] = useConfirm({
+    title: "Are you sure?",
+    message:
+      "Deleting category will result in all associated trx to become uncategorized.",
+  });
 
   const categoryLoading =
     getCategoryLoading || postCategoryLoading || deleteCategoryLoading;
@@ -145,6 +154,8 @@ export function AddTransactionForm() {
     toast.promise(postQuery({ name: createCategory }).unwrap(), {
       loading: "Creating category...",
       success: (data) => {
+        form.setValue("categoryId", data.id);
+        setCatOpen(false);
         return `Category ${data.name} created.`;
       },
       error: (error) => {
@@ -153,337 +164,353 @@ export function AddTransactionForm() {
     });
   }
 
-  function handleDeleteCategory(id: string) {
-    toast.promise(deleteQuery({ id }).unwrap(), {
-      loading: "Deleting category...",
-      success: (data) => {
-        return `Category ${data.name} deleted.`;
-      },
-      error: (error) => {
-        return error.error;
-      },
-    });
+  async function handleDeleteCategory(id: string) {
+    const res = await confirm();
+    if (res) {
+      toast.promise(deleteQuery({ id }).unwrap(), {
+        loading: "Deleting category...",
+        success: (data) => {
+          return `Category ${data.name} deleted.`;
+        },
+        error: (error) => {
+          return error.error;
+        },
+      });
+    }
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 p-4 overflow-y-auto scrollbar-thin"
-      >
-        <FormField
-          control={form.control}
-          name="payee"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Payee</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Enter payee..."
-                  {...field}
-                  onClick={() => onTouch("payee")}
-                />
-              </FormControl>
-
-              <FormDescription>
-                A <i>payee</i> is the other party of this transaction🤔
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex flex-col lg:flex-row lg:items-start gap-4">
+    <>
+      <ConfirmDialog />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 p-4 overflow-y-auto scrollbar-thin"
+        >
           <FormField
             control={form.control}
-            name="amount"
+            name="payee"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Amount</FormLabel>
+                <FormLabel>Payee</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter amount..."
-                    onClick={() => onTouch("amount")}
+                    placeholder="Enter payee..."
                     {...field}
-                    type="number"
-                    className={cn(
-                      field.value < 0 &&
-                        "border-red-400 focus-visible:ring-red-400",
-                      field.value > 0 &&
-                        "border-green-400 focus-visible:ring-green-400"
-                    )}
+                    onClick={() => onTouch("payee")}
                   />
                 </FormControl>
 
                 <FormDescription>
-                  Use <span className="font-bold">-</span> for <i>debit</i> and
-                  no sign or <span className="font-bold">+</span> for{" "}
-                  <i>credit</i>😇
+                  A <i>payee</i> is the other party of this transaction🤔
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem className="flex flex-col py-1.5 gap-y-1">
-                <FormLabel className="mr-4">Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="flex lg:flex-row flex-col lg:items-start gap-4">
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Mode of payment</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+          <div className="flex flex-col lg:flex-row lg:items-start gap-4">
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <SelectTrigger
+                    <Input
+                      placeholder="Enter amount..."
+                      onClick={() => onTouch("amount")}
+                      {...field}
+                      type="number"
                       className={cn(
-                        field.value === "CASH" && "text-green-400",
-                        field.value === "CARD" && "text-blue-400",
-                        field.value === "UPI" && "text-orange-400"
+                        field.value < 0 &&
+                          "border-red-400 focus-visible:ring-red-400",
+                        field.value > 0 &&
+                          "border-green-400 focus-visible:ring-green-400"
                       )}
-                    >
-                      <SelectValue placeholder="Select the mode of payment" />
-                    </SelectTrigger>
+                    />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="CASH">
-                      <div className="select_icon">
-                        <Banknote />
-                        CASH
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="CARD">
-                      <div className="select_icon">
-                        <CreditCard />
-                        CARD
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="UPI">
-                      <div className="select_icon">
-                        <QrCode />
-                        UPI
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="categoryId"
-            render={({ field }) => (
-              <FormItem className="flex flex-col gap-y-1 py-1.5 items-start">
-                <FormLabel>Category</FormLabel>
-                {!categories || categoryLoading ? (
-                  <Skeleton className="border-md w-full h-9" />
-                ) : (
-                  <Popover>
+
+                  <FormDescription>
+                    Use <span className="font-bold">-</span> for <i>debit</i>{" "}
+                    and no sign or <span className="font-bold">+</span> for{" "}
+                    <i>credit</i>😇
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col py-1.5 gap-y-1">
+                  <FormLabel className="mr-4">Date</FormLabel>
+                  <Popover
+                    open={calOpen}
+                    onOpenChange={(value) => setCalOpen(value)}
+                  >
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant="outline"
-                          role="combobox"
                           className={cn(
-                            "w-[200px] justify-between",
+                            "w-[240px] pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground"
                           )}
                         >
-                          {field.value
-                            ? categories.find(
-                                (category) => category.id === field.value
-                              )?.name || "Select Category"
-                            : "Select Category"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandInput
-                          placeholder="Search categories..."
-                          onValueChange={(val) => setCreateCategory(val)}
-                        />
-                        <CommandList>
-                          <CommandEmpty className="px-0 py-2">
-                            <Button
-                              variant="link"
-                              className="w-full h-full text-ellipsis overflow-clip"
-                              onClick={handleCreateCategory}
-                            >
-                              Create category {createCategory}
-                            </Button>
-                          </CommandEmpty>
-                          <CommandGroup>
-                            {categories.map((category) => (
-                              <CommandItem
-                                value={category.name}
-                                key={category.id}
-                                onSelect={() => {
-                                  form.setValue("categoryId", category.id);
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    category.id === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                                {category.name}
-                                <Trash2
-                                  size={16}
-                                  className="text-red-500 ml-auto cursor-pointer"
-                                  onClick={() => {
-                                    form.setValue("categoryId", "");
-                                    handleDeleteCategory(category.id);
-                                  }}
-                                />
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={(e) => {
+                          setCalOpen(false);
+                          field.onChange(e);
+                        }}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex lg:flex-row flex-col lg:items-start gap-4">
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mode of payment</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger
+                        className={cn(
+                          field.value === "CASH" && "text-green-400",
+                          field.value === "CARD" && "text-blue-400",
+                          field.value === "UPI" && "text-orange-400"
+                        )}
+                      >
+                        <SelectValue placeholder="Select the mode of payment" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="CASH">
+                        <div className="select_icon">
+                          <Banknote />
+                          CASH
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="CARD">
+                        <div className="select_icon">
+                          <CreditCard />
+                          CARD
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="UPI">
+                        <div className="select_icon">
+                          <QrCode />
+                          UPI
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-y-1 py-1.5 items-start">
+                  <FormLabel>Category</FormLabel>
+                  {!categories || categoryLoading ? (
+                    <Skeleton className="border-md w-full lg:w-36 h-9" />
+                  ) : (
+                    <Popover
+                      open={catOpen}
+                      onOpenChange={(value) => setCatOpen(value)}
+                    >
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-[200px] justify-between",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value
+                              ? categories.find(
+                                  (category) => category.id === field.value
+                                )?.name || "Select Category"
+                              : "Select Category"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search categories..."
+                            onValueChange={(val) => setCreateCategory(val)}
+                          />
+                          <CommandList>
+                            <CommandEmpty className="px-0 py-2">
+                              <Button
+                                variant="link"
+                                className="w-full h-full text-ellipsis overflow-clip"
+                                onClick={handleCreateCategory}
+                              >
+                                Create category {createCategory}
+                              </Button>
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {categories.map((category) => (
+                                <CommandItem
+                                  value={category.name}
+                                  key={category.id}
+                                  onSelect={() => {
+                                    form.setValue("categoryId", category.id);
+                                    setCatOpen(false);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      category.id === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {category.name}
+                                  <Trash2
+                                    size={16}
+                                    className="text-red-500 ml-auto cursor-pointer"
+                                    onClick={() => {
+                                      form.setValue("categoryId", "");
+                                      handleDeleteCategory(category.id);
+                                    }}
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <FormField
+            control={form.control}
+            name="bankAccountId"
+            render={({ field }) => (
+              <FormItem className="flex flex-col gap-y-1 py-1.5 items-start">
+                <FormLabel>Account</FormLabel>
+                {!accounts || accountLoading ? (
+                  <Skeleton className="border-md w-full h-9" />
+                ) : (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select account" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <Table>
+                        <TableBody>
+                          {accounts.map((account) => (
+                            <SelectItem value={account.id} key={account.id}>
+                              <TableRow
+                                onClick={() => field.onChange(account.id)}
+                              >
+                                <TableCell>
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      account.id === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                </TableCell>
+
+                                <TableCell>{account.accountName}</TableCell>
+                                <TableCell>{account.accountNumber}</TableCell>
+                                <TableCell>{account.bankName}</TableCell>
+                                <TableCell>{account.accountType}</TableCell>
+                              </TableRow>
+                            </SelectItem>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </SelectContent>
+                  </Select>
                 )}
+                <FormDescription>
+                  <Link href="/accounts/new" className="underline text-primary">
+                    Add account
+                  </Link>
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
 
-        <FormField
-          control={form.control}
-          name="bankAccountId"
-          render={({ field }) => (
-            <FormItem className="flex flex-col gap-y-1 py-1.5 items-start">
-              <FormLabel>Account</FormLabel>
-              {!accounts || accountLoading ? (
-                <Skeleton className="border-md w-full h-9" />
-              ) : (
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select account" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <Table>
-                      <TableBody>
-                        {accounts.map((account) => (
-                          <SelectItem value={account.id} key={account.id}>
-                            <TableRow
-                              onClick={() => field.onChange(account.id)}
-                            >
-                              <TableCell>
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    account.id === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                              </TableCell>
+          <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Additional Notes</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Optional..."
+                    {...field}
+                    className="resize-none h-40"
+                    onClick={() => onTouch("notes")}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
 
-                              <TableCell>{account.accountName}</TableCell>
-                              <TableCell>{account.accountNumber}</TableCell>
-                              <TableCell>{account.bankName}</TableCell>
-                              <TableCell>{account.accountType}</TableCell>
-                            </TableRow>
-                          </SelectItem>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </SelectContent>
-                </Select>
-              )}
-              <FormDescription>
-                <Link href="/accounts/new" className="underline text-primary">
-                  Add account
-                </Link>
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="notes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Additional Notes</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Optional..."
-                  {...field}
-                  className="resize-none h-40"
-                  onClick={() => onTouch("notes")}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <Button
-          type="submit"
-          disabled={
-            categoryLoading ||
-            accountLoading ||
-            transactionLoading ||
-            !categories
-          }
-        >
-          Submit
-        </Button>
-      </form>
-    </Form>
+          <Button
+            type="submit"
+            disabled={
+              categoryLoading ||
+              accountLoading ||
+              transactionLoading ||
+              !categories
+            }
+          >
+            Submit
+          </Button>
+        </form>
+      </Form>
+    </>
   );
 }
