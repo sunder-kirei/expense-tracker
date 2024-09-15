@@ -7,6 +7,7 @@ export const config = {
 export default auth((req) => {
   if (!req.auth && !req.nextUrl.pathname.includes("/signin")) {
     const newUrl = new URL(`/signin?callback=${req.url}`, req.nextUrl.origin);
+    console.log("redirect ");
     return Response.redirect(newUrl);
   }
 });
