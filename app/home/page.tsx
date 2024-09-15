@@ -18,12 +18,14 @@ import {
   useGetUserQuery,
 } from "@/store/services/api";
 import { format } from "date-fns";
-import { ChartArea, ChartColumn, ChartSpline } from "lucide-react";
+import { ChartArea, ChartColumn, ChartSpline, Plus } from "lucide-react";
 import { useState } from "react";
 import { CardTile } from "./components/CardTile";
 import { AppAreaChart } from "./components/charts/AppAreaChart";
 import { AppBarChart } from "./components/charts/AppBarChart";
 import { AppLineChart } from "./components/charts/AppLineChart";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const defaultFrom = new Date();
 defaultFrom.setDate(1);
@@ -242,6 +244,14 @@ export default function Home() {
           )}
         </div>
       </div>
+      <Link href="/transactions/new">
+        <Button
+          variant="outline"
+          className="fixed bottom-8 right-8 flex gap-x-2 ring ring-primary"
+        >
+          <Plus />
+        </Button>
+      </Link>
     </Page>
   );
 }

@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import { AccountCard } from "./components/AccountCard";
 import { AccountForm } from "./components/AccountForm";
 import { Page } from "@/components/layout/Page";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const defaultFrom = new Date();
 defaultFrom.setDate(1);
@@ -96,8 +97,11 @@ export default function AccountsPage() {
           </DialogContent>
         </Dialog>
       )}
-      {accountLoading || userLoading ? (
-        <Loader />
+      {true || accountLoading || userLoading ? (
+        <div className="flex flex-col w-full h-fit gap-y-4">
+          <Skeleton className="w-32 h-9 self-end" />
+          <Skeleton className="w-full h-48" />
+        </div>
       ) : (
         <div className="flex flex-col h-full w-full gap-4">
           <RangeDatePicker
