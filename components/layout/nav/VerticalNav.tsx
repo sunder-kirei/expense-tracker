@@ -9,7 +9,10 @@ export function VerticalNav({
   ...props
 }: HTMLAttributes<HTMLElement>) {
   return (
-    <nav className={twMerge("sm:flex flex-col hidden", className)} {...props}>
+    <nav
+      className={twMerge("sm:flex flex-col hidden z-[1000]", className)}
+      {...props}
+    >
       {/* show summary of all projects issue assigned to me and all projects issues in total, recently opened, analytics */}
       <NavTile href="/home" onClick={onClick}>
         <House className="nav-tile__leading" />

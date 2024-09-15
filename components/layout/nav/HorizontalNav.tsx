@@ -12,7 +12,7 @@ export async function HorizontalNav({
   return (
     <nav
       className={twMerge(
-        "flex justify-between w-full py-4 px-4 text-xl items-center",
+        "flex justify-between w-full py-4 px-4 text-xl items-center z-[1000]",
         className
       )}
       {...props}
