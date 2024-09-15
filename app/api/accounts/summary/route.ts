@@ -1,12 +1,18 @@
 import { auth } from "@/auth";
 import { accountSummary } from "@/lib/api/summary";
 import { prisma } from "@/prisma";
+import { SummarySchema } from "@/schema/api/Summary.schema";
 import { AccountExpenseSummary } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
+import { fromJSON } from "postcss";
 
 export async function GET(request: NextRequest) {
   try {
     const session = await auth();
+    const { from, to } = SummarySchema.parse(
+      Object.fromEntries(request.nextUrl.searchParams)
+    );
+
     if (!session) {
       return NextResponse.json(
         {
@@ -28,7 +34,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-    const data = await accountSummary(user, true);
+    const data = await accountSummary(user, from, to);
     return NextResponse.json(
       {
         data,

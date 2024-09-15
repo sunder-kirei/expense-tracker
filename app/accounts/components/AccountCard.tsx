@@ -19,12 +19,14 @@ import { Dispatch, SetStateAction } from "react";
 export function AccountCard({
   locale,
   setSelectedAccount,
+  onDelete,
   ...account
 }: AccountExpenseSummary & {
   locale: string;
   setSelectedAccount: Dispatch<
     SetStateAction<AccountExpenseSummary | undefined>
   >;
+  onDelete: (id: string) => void;
 }) {
   return (
     <Card className="w-full max-w-[500px] h-fit">
@@ -45,7 +47,14 @@ export function AccountCard({
         <CardTile {...account} locale={locale} variant="expense" />
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="destructive">Delete</Button>
+        <Button
+          variant="destructive"
+          onClick={() => {
+            onDelete(account.id);
+          }}
+        >
+          Delete
+        </Button>
         <Button
           variant="outline"
           className="flex gap-x-2 items-center"

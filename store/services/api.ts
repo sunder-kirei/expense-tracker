@@ -1,4 +1,4 @@
-import { TrxSummaryInterface } from "@/schema/api/TrxSummary.schema";
+import { SummaryInterface } from "@/schema/api/Summary.schema";
 import { DeleteAccountInterface } from "@/schema/DeleteAccount.schema";
 import { DeleteCategoryInterface } from "@/schema/DeleteCategory.schema";
 import { DeleteTransactionInterface } from "@/schema/DeleteTransaction.schema";
@@ -98,13 +98,11 @@ const api = createApi({
       PostTransactionInterface
     >({
       query: (body) => {
-        body.date.setUTCHours(0, 0, 0, 0);
         return {
           url: "/transactions",
           method: "POST",
           body: {
             ...body,
-            date: body.date.toUTCString(),
           },
         };
       },
@@ -152,37 +150,38 @@ const api = createApi({
     }),
 
     // get summary
-    getAccountsSummary: builder.query<AccountExpenseSummary[], void>({
-      query: () => ({ url: "/accounts/summary", method: "GET" }),
+    getAccountsSummary: builder.query<
+      AccountExpenseSummary[],
+      SummaryInterface
+    >({
+      query: ({ to, from }) => ({
+        url: "/accounts/summary",
+        method: "GET",
+        params: { to, from },
+      }),
       transformResponse: (res, meta, arg) => {
         const response = res as any;
         return response.data;
       },
       providesTags: () => ["accounts"],
     }),
-    getCategoriesSummary: builder.query<CategorySummary[], TrxSummaryInterface>(
-      {
-        query: ({ period }) => ({
-          url: "/categories/summary",
-          method: "GET",
-          params: period && {
-            period: period,
-          },
-        }),
-        transformResponse: (res, meta, arg) => {
-          const response = res as any;
-          return response.data;
-        },
-        providesTags: () => ["categories"],
-      }
-    ),
-    getTransactionsSummary: builder.query<TrxSummary[], TrxSummaryInterface>({
-      query: ({ period }) => ({
+    getCategoriesSummary: builder.query<CategorySummary[], SummaryInterface>({
+      query: ({ to, from }) => ({
+        url: "/categories/summary",
+        method: "GET",
+        params: { to, from },
+      }),
+      transformResponse: (res, meta, arg) => {
+        const response = res as any;
+        return response.data;
+      },
+      providesTags: () => ["categories"],
+    }),
+    getTransactionsSummary: builder.query<TrxSummary[], SummaryInterface>({
+      query: ({ to, from }) => ({
         url: `/transactions/summary`,
         method: "GET",
-        params: period && {
-          period: period,
-        },
+        params: { to, from },
       }),
       transformResponse: (res, meta, arg) => {
         const response = res as any;
@@ -205,6 +204,7 @@ export const {
   usePostTransactionMutation,
   useDeleteTransactionsMutation,
   useDeleteCategoryMutation,
+  useDeleteAccountMutation,
   usePutAccountMutation,
   usePatchUserMutation,
   useGetAccountsSummaryQuery,

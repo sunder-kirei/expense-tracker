@@ -18,7 +18,6 @@ export default function NewTransactionPage() {
         return `Account added successfully😎`;
       },
       error: (err) => {
-        console.log(err);
         return "Something went wrong🥲";
       },
     });

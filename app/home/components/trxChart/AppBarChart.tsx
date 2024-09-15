@@ -1,7 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrxSummaryInterface } from "@/schema/api/TrxSummary.schema";
+import { TrxSummaryInterface } from "@/schema/api/Summary.schema";
 import {
   useGetTransactionsSummaryQuery,
   useGetUserQuery,

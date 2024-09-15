@@ -18,7 +18,7 @@ model Transaction {
     type          TransactionType @default(CASH)
     user          User            @relation(fields: [userId], references: [id])
     userId        String
-    bankAccount   BankAccount     @relation(fields: [bankAccountId], references: [id])
+    bankAccount   BankAccount     @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
     bankAccountId String
     category      Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
     categoryId    String?

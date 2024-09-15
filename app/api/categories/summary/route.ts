@@ -1,14 +1,14 @@
 import { auth } from "@/auth";
 import { accountSummary, categorySummary } from "@/lib/api/summary";
 import { prisma } from "@/prisma";
-import { TrxSummarySchema } from "@/schema/api/TrxSummary.schema";
+import { SummarySchema } from "@/schema/api/Summary.schema";
 import { AccountExpenseSummary } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
     const session = await auth();
-    const period = TrxSummarySchema.parse(
+    const { from, to } = SummarySchema.parse(
       Object.fromEntries(request.nextUrl.searchParams)
     );
     if (!session) {
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-    const data = await categorySummary(user, period.period || user.period);
+    const data = await categorySummary(user, from, to);
 
     return NextResponse.json(
       {

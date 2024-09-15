@@ -112,7 +112,6 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const { id } = DeleteCategorySchema.parse(await req.json());
-    console.log(id);
     const session = await auth();
     if (!session) {
       return NextResponse.json(
@@ -155,7 +154,6 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ ...deletedCategory }, { status: 202 });
   } catch (err: any) {
-    console.log(err);
     if (err instanceof ZodError) {
       return NextResponse.json(
         {

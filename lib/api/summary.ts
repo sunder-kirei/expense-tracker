@@ -1,34 +1,18 @@
 import { prisma } from "@/prisma";
 import { AccountExpenseSummary, CategorySummary, TrxSummary } from "@/types";
 import { $Enums, User } from "@prisma/client";
+import { normalizeDate } from "../date";
+import { generateRandomColor } from "../generateColor";
 
-const minDate = new Date(0);
+export async function accountSummary(user: User, from: Date, to: Date) {
+  from = normalizeDate(from);
+  to = normalizeDate(to);
 
-function getPeriod(all: boolean, period: $Enums.Period) {
-  let from = minDate,
-    to = new Date();
-  to.setUTCDate(to.getUTCDate() + 3);
-  to.setUTCHours(0, 0, 0, 0);
-
-  if (!all) {
-    from = new Date();
-    switch (period) {
-      case "MONTH":
-        from.setUTCMonth(from.getUTCMonth() - 1);
-        break;
-      case "WEEK":
-        from.setUTCDate(from.getUTCDate() - 7);
-        break;
-      default:
-        from.setUTCFullYear(from.getUTCFullYear() - 1);
-        break;
-    }
-  }
-  return { from, to };
-}
-
-export async function accountSummary(user: User, all: boolean = false) {
-  const { from, to } = getPeriod(all, user.period);
+  const accounts = await prisma.bankAccount.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
 
   const queryResult = await prisma.$queryRaw`SELECT ba.*,
       SUM(CASE WHEN t.amount >= 0 THEN t.amount ELSE 0 END) as income,
@@ -47,9 +31,9 @@ export async function accountSummary(user: User, all: boolean = false) {
       WHERE 
         t.date
           BETWEEN 
-            ${from.toUTCString()}
+            ${from}
               AND 
-            ${to.toUTCString()}
+            ${to}
           AND u.id = ${user.id}
       GROUP BY ba.id;`;
 
@@ -63,25 +47,25 @@ export async function accountSummary(user: User, all: boolean = false) {
     })
   );
 
+  accounts.forEach((acc) => {
+    const foundIdx = data.find((a) => a.id === acc.id);
+    if (!foundIdx) {
+      data.push({
+        ...acc,
+        income: 0,
+        incomeCount: 0,
+        expense: 0,
+        expenseCount: 0,
+      });
+    }
+  });
+
   return data;
 }
 
-function generateRandomColor() {
-  // Generate random values for red, green, and blue (0-255)
-  const r = Math.floor(Math.random() * 256);
-  const g = Math.floor(Math.random() * 256);
-  const b = Math.floor(Math.random() * 256);
-
-  // Convert RGB values to hex format
-  const hexColor = `#${r.toString(16).padStart(2, "0")}${g
-    .toString(16)
-    .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-
-  return hexColor;
-}
-
-export async function categorySummary(user: User, period: $Enums.Period) {
-  const { from, to } = getPeriod(false, period);
+export async function categorySummary(user: User, from: Date, to: Date) {
+  from = normalizeDate(from);
+  to = normalizeDate(to);
 
   const queryResult = await prisma.$queryRaw`SELECT c.*, temp.* FROM
   (SELECT t."categoryId", COUNT(*),
@@ -93,16 +77,17 @@ export async function categorySummary(user: User, period: $Enums.Period) {
       "Transaction" as t
       ON c.id = t."categoryId" OR t."categoryId" IS NULL
     WHERE 
-        t.date
-          BETWEEN 
-            ${from.toUTCString()}
-              AND 
-            ${to.toUTCString()}
-          AND c."userId" = ${user.id}
+        c."userId" = ${user.id}
+        AND
+          t.date
+            BETWEEN ${from}
+            AND 
+            ${to}
     GROUP BY t."categoryId") as temp
     LEFT JOIN
     "Category" as c
     ON temp."categoryId" = c.id;`;
+
   const data: CategorySummary[] = (queryResult as any).map((item: any) => ({
     id: item.id ?? undefined,
     name: item.name ?? undefined,
@@ -129,8 +114,9 @@ function comp(a: Date, b: Date) {
   return a.getUTCFullYear() < b.getUTCFullYear() ? -1 : 1;
 }
 
-export async function transactionSummary(user: User, period: $Enums.Period) {
-  const { from, to } = getPeriod(false, period);
+export async function transactionSummary(user: User, from: Date, to: Date) {
+  from = normalizeDate(from);
+  to = normalizeDate(to);
 
   const queryResult = await prisma.$queryRaw`SELECT t.date,
     SUM(CASE WHEN t.amount > 0 THEN t.amount ELSE 0 END) as income,
@@ -141,9 +127,9 @@ export async function transactionSummary(user: User, period: $Enums.Period) {
         t."userId" = ${user.id}
         AND
           t.date
-            BETWEEN ${from.toUTCString()}
+            BETWEEN ${from}
             AND 
-            ${to.toUTCString()}
+            ${to}
       GROUP BY t.date
       ORDER BY t.date`;
   const mapQuery: TrxSummary[] = (queryResult as any).map((item: any) => ({

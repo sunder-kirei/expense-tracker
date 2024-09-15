@@ -11,7 +11,7 @@ import {
   useGetTransactionsSummaryQuery,
   useGetUserQuery,
 } from "@/store/services/api";
-import { TrxSummaryInterface } from "@/schema/api/TrxSummary.schema";
+import { SummaryInterface } from "@/schema/api/Summary.schema";
 import { useState } from "react";
 import {
   Card,
@@ -43,22 +43,28 @@ import {
 } from "lucide-react";
 import { AppRadarChart } from "./components/categoryChart/AppRadarChart";
 import { NoData } from "@/components/NoData";
+import { RangeDatePicker } from "@/components/RangeDatePicker";
+
+const defaultFrom = new Date();
+defaultFrom.setDate(1);
+const defaultTo = new Date();
 
 export default function Home() {
-  const [period, setPeriod] = useState<TrxSummaryInterface>({
-    period: undefined,
-  });
+  const [from, setFrom] = useState(defaultFrom);
+  const [to, setTo] = useState(defaultTo);
   const [trxGraph, setTrxGraph] = useState<{ type: "bar" | "line" | "area" }>({
     type: "area",
   });
   const [catGraph, setCatGraph] = useState<{ type: "pie" | "radar" }>({
     type: "pie",
   });
-  const { data: trx, isFetching: trxLoading } =
-    useGetTransactionsSummaryQuery(period);
+  const { data: trx, isFetching: trxLoading } = useGetTransactionsSummaryQuery({
+    from,
+    to,
+  });
   const { data: user, isFetching: userLoading } = useGetUserQuery();
   const { data: category, isFetching: categoryLoading } =
-    useGetCategoriesSummaryQuery(period);
+    useGetCategoriesSummaryQuery({ from, to });
 
   const net = trx?.reduce(
     (a, t) => (a += t.income.valueOf() - t.expense.valueOf()),
@@ -68,35 +74,19 @@ export default function Home() {
   const expense = trx?.reduce((a, t) => (a += t.expense.valueOf()), 0);
 
   return (
-    <div className="flex flex-col h-full w-full overflow-auto lg:overflow-y-hidden scrollbar-thin">
-      <div className="controls p-2 flex justify-end">
-        {user ? (
-          <Select
-            defaultValue={user?.period}
-            onValueChange={(value) =>
-              setPeriod({ period: value as $Enums.Period })
-            }
-            disabled={trxLoading || userLoading}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a period" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {Object.keys($Enums.Period).map((key) => (
-                  <SelectItem value={key} key={key}>
-                    {key}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        ) : (
-          <Skeleton className="h-12 w-32" />
-        )}
-      </div>
+    <div className="flex flex-col h-full w-full overflow-auto lg:overflow-y-hidden scrollbar-thin gap-2 px-4">
+      <RangeDatePicker
+        from={from}
+        to={to}
+        setFromDate={(val) => {
+          if (val) setFrom(val);
+        }}
+        setToDate={(val) => {
+          if (val) setTo(val);
+        }}
+      />
 
-      <div className="w-full flex flex-col lg:h-52 lg:flex-row gap-2 items-center p-2">
+      <div className="w-full flex flex-col lg:h-52 lg:flex-row gap-2 items-center">
         <CardTile
           data={net?.toString()}
           cardDescription="Sum total of all your expenses"
@@ -114,7 +104,7 @@ export default function Home() {
           loading={trxLoading || userLoading}
         />
         <CardTile
-          data={expense?.toString()}
+          data={`${expense?.toString()}`}
           cardDescription="Sum total of all your debits"
           cardTitle="Expenses"
           locale={user?.locale}

@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.log(err);
+
     return NextResponse.json(
       {
         error: err.toString(),
@@ -178,7 +178,6 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ ...deletedTransaction }, { status: 202 });
   } catch (err: any) {
-    console.log(err);
     if (err instanceof ZodError) {
       return NextResponse.json(
         {

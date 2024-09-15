@@ -123,7 +123,6 @@ export async function POST(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const { id } = DeleteAccountSchema.parse(await req.json());
-    console.log(id);
     const session = await auth();
     if (!session) {
       return NextResponse.json(
@@ -136,7 +135,6 @@ export async function DELETE(req: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { email: session.user?.email ?? undefined },
-      include: { BankAccount: true },
     });
 
     if (!user) {
@@ -148,7 +146,13 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const foundAcc = user.BankAccount.find((a) => a.id === id);
+    const foundAcc = await prisma.bankAccount.findUnique({
+      where: {
+        id,
+        userId: user.id,
+      },
+    });
+
     if (!foundAcc) {
       return NextResponse.json(
         {
@@ -158,7 +162,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const deletedAccount = await prisma.category.delete({
+    const deletedAccount = await prisma.bankAccount.delete({
       where: {
         id,
       },
@@ -166,7 +170,6 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ ...deletedAccount }, { status: 202 });
   } catch (err: any) {
-    console.log(err);
     if (err instanceof ZodError) {
       return NextResponse.json(
         {

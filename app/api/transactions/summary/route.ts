@@ -1,13 +1,13 @@
 import { auth } from "@/auth";
 import { transactionSummary } from "@/lib/api/summary";
 import { prisma } from "@/prisma";
-import { TrxSummarySchema } from "@/schema/api/TrxSummary.schema";
+import { SummarySchema } from "@/schema/api/Summary.schema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   try {
     const session = await auth();
-    const period = TrxSummarySchema.parse(
+    const { to, from } = SummarySchema.parse(
       Object.fromEntries(request.nextUrl.searchParams)
     );
     if (!session) {
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-    const data = await transactionSummary(user, period.period || user.period);
+    const data = await transactionSummary(user, from, to);
     return NextResponse.json(
       {
         ...data,

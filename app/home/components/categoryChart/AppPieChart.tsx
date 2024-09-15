@@ -6,7 +6,6 @@ import { Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { CustomTooltip } from "./CustomTooltip";
 
 export function AppPieChart({ categories, loading, user }: CategoryProps) {
-  console.log(categories);
   return categories && user && !loading ? (
     <ResponsiveContainer height="100%">
       <PieChart

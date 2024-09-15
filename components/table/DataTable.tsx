@@ -102,7 +102,9 @@ export function DataTable<T>({
 
   async function _handleDelete() {
     const res = await confirm();
-    handleDelete(table.getSelectedRowModel());
+    if (res) {
+      handleDelete(table.getSelectedRowModel());
+    }
   }
 
   return (
