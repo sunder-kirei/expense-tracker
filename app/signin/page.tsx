@@ -1,9 +1,5 @@
-import { redirect } from "next/navigation";
-import { signIn, auth, providerMap } from "@/auth";
-import { AuthError } from "next-auth";
-import { Button } from "@/components/ui/button";
+import { providerMap, signIn } from "@/auth";
 import { PiggyBank } from "lucide-react";
-import { NextRequest } from "next/server";
 
 export default async function SignInPage({
   searchParams,

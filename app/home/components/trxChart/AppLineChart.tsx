@@ -1,15 +1,9 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrxSummaryInterface } from "@/schema/api/Summary.schema";
-import {
-  useGetTransactionsSummaryQuery,
-  useGetUserQuery,
-} from "@/store/services/api";
+import { ChartTrxProps } from "@/types";
 import { format } from "date-fns";
-import { useState } from "react";
 import {
-  CartesianGrid,
   Legend,
   Line,
   LineChart,
@@ -19,7 +13,6 @@ import {
   YAxis,
 } from "recharts";
 import { CustomTooltip } from "./CustomTooltip";
-import { TrxSummary, GetUser, ChartTrxProps } from "@/types";
 
 export function AppLineChart({ trx, user, loading }: ChartTrxProps) {
   return trx && user && !loading ? (

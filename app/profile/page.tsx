@@ -2,17 +2,7 @@
 
 import { Loader } from "@/components/layout/Loader";
 import UserAvatar from "@/components/layout/nav/UserAvatar";
-import {
-  TableHead,
-  Table,
-  TableRow,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
-import { PatchUserInterface, PatchUserSchema } from "@/schema/PatchUser.schema";
-import { useGetUserQuery, usePatchUserMutation } from "@/store/services/api";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useGetUserQuery } from "@/store/services/api";
 import { EditUserForm } from "./components/EditUserForm";
 
 export default function ProfilePage() {

@@ -1,28 +1,18 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrxSummaryInterface } from "@/schema/api/Summary.schema";
-import {
-  useGetTransactionsSummaryQuery,
-  useGetUserQuery,
-} from "@/store/services/api";
+import { ChartTrxProps } from "@/types";
 import { format } from "date-fns";
-import { useState } from "react";
 import {
   Area,
   AreaChart,
-  CartesianGrid,
   Legend,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
 import { CustomTooltip } from "./CustomTooltip";
-import { GetUser } from "@/types/userApi";
-import { ChartTrxProps, TrxSummary } from "@/types";
 
 export function AppAreaChart({ trx, user, loading }: ChartTrxProps) {
   return trx && user && !loading ? (

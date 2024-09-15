@@ -174,7 +174,7 @@ export function AddTransactionForm() {
         <FormField
           control={form.control}
           name="payee"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Payee</FormLabel>
               <FormControl>
@@ -196,7 +196,7 @@ export function AddTransactionForm() {
           <FormField
             control={form.control}
             name="amount"
-            render={({ field, fieldState }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Amount</FormLabel>
                 <FormControl>
@@ -226,7 +226,7 @@ export function AddTransactionForm() {
           <FormField
             control={form.control}
             name="date"
-            render={({ field, fieldState }) => (
+            render={({ field }) => (
               <FormItem className="flex flex-col py-1.5 gap-y-1">
                 <FormLabel className="mr-4">Date</FormLabel>
                 <Popover>
@@ -270,7 +270,7 @@ export function AddTransactionForm() {
           <FormField
             control={form.control}
             name="type"
-            render={({ field, fieldState }) => (
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Mode of payment</FormLabel>
                 <Select
@@ -316,7 +316,7 @@ export function AddTransactionForm() {
           <FormField
             control={form.control}
             name="categoryId"
-            render={({ field, fieldState }) => (
+            render={({ field }) => (
               <FormItem className="flex flex-col gap-y-1 py-1.5 items-start">
                 <FormLabel>Category</FormLabel>
                 {!categories || categoryLoading ? (
@@ -403,7 +403,7 @@ export function AddTransactionForm() {
         <FormField
           control={form.control}
           name="bankAccountId"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem className="flex flex-col gap-y-1 py-1.5 items-start">
               <FormLabel>Account</FormLabel>
               {!accounts || accountLoading ? (
@@ -421,7 +421,7 @@ export function AddTransactionForm() {
                     <Table>
                       <TableBody>
                         {accounts.map((account) => (
-                          <SelectItem value={account.id}>
+                          <SelectItem value={account.id} key={account.id}>
                             <TableRow
                               onClick={() => field.onChange(account.id)}
                             >
@@ -464,7 +464,7 @@ export function AddTransactionForm() {
         <FormField
           control={form.control}
           name="notes"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Additional Notes</FormLabel>
               <FormControl>

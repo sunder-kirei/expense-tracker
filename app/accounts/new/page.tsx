@@ -1,10 +1,10 @@
 "use client";
 
 import { PostAccountInterface } from "@/schema/PostAccount.schema";
-import { AccountForm } from "../components/AccountForm";
 import { usePostAccountMutation } from "@/store/services/api";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { AccountForm } from "../components/AccountForm";
 
 export default function NewTransactionPage() {
   const router = useRouter();
@@ -13,11 +13,11 @@ export default function NewTransactionPage() {
   function onSubmit(value: PostAccountInterface) {
     toast.promise(postAccount({ ...value }).unwrap(), {
       loading: "Adding account...",
-      success: (data) => {
+      success: () => {
         router.push("/accounts");
         return `Account added successfully😎`;
       },
-      error: (err) => {
+      error: () => {
         return "Something went wrong🥲";
       },
     });

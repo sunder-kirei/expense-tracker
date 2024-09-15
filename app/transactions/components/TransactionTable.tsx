@@ -1,6 +1,5 @@
 "use client";
 
-import { cardVariants } from "@/app/accounts/components/CardTile";
 import { Loader } from "@/components/layout/Loader";
 import { DataTable } from "@/components/table/DataTable";
 import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader";
@@ -14,7 +13,7 @@ import { GetTransaction } from "@/types";
 import { ColumnDef, RowModel } from "@tanstack/react-table";
 import { formatDate } from "date-fns";
 import { getAllInfoByISO } from "iso-country-currency";
-import { Banknote, CreditCard, Loader2, QrCode } from "lucide-react";
+import { Banknote, CreditCard, QrCode } from "lucide-react";
 import CurrencyInput from "react-currency-input-field";
 import { toast } from "sonner";
 

@@ -1,55 +1,30 @@
 "use client";
 
 import { Loader } from "@/components/layout/Loader";
+import { NoData } from "@/components/NoData";
+import { RangeDatePicker } from "@/components/RangeDatePicker";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import useConfirm from "@/hooks/useConfirm";
+import { PostAccountInterface } from "@/schema/PostAccount.schema";
 import {
   useDeleteAccountMutation,
   useGetAccountsSummaryQuery,
   useGetUserQuery,
   usePutAccountMutation,
 } from "@/store/services/api";
-import { AccountCard } from "./components/AccountCard";
-import { Dialog, DialogFooter, DialogHeader } from "@/components/ui/dialog";
-import {
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Copy, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
-import {
-  PostAccountInterface,
-  PostAccountSchema,
-} from "@/schema/PostAccount.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { AccountExpenseSummary } from "@/types";
-import { useState } from "react";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-  SelectItem,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Plus } from "lucide-react";
 import Link from "next/link";
-import { AccountForm } from "./components/AccountForm";
+import { useState } from "react";
 import { toast } from "sonner";
-import { NoData } from "@/components/NoData";
-import { RangeDatePicker } from "@/components/RangeDatePicker";
-import useConfirm from "@/hooks/useConfirm";
+import { AccountCard } from "./components/AccountCard";
+import { AccountForm } from "./components/AccountForm";
 
 const defaultFrom = new Date();
 defaultFrom.setDate(1);
@@ -77,10 +52,10 @@ export default function AccountsPage() {
     setSelectedAccount(undefined);
     toast.promise(putAccount({ ...value, accountId }).unwrap(), {
       loading: "Editing account...",
-      success: (data) => {
+      success: () => {
         return `Edited account successfully😎`;
       },
-      error: (err) => {
+      error: () => {
         return "Something went wrong🥲";
       },
     });
@@ -91,10 +66,10 @@ export default function AccountsPage() {
     if (res) {
       toast.promise(deleteAccount({ id }).unwrap(), {
         loading: "Deleting account...",
-        success: (data) => {
+        success: () => {
           return `Account deleted successfully😎`;
         },
-        error: (err) => {
+        error: () => {
           return "Something went wrong🥲";
         },
       });
@@ -135,6 +110,7 @@ export default function AccountsPage() {
           {accounts?.length === 0 && <NoData className="max-w-[500px] h-56" />}
           {accounts?.map((account) => (
             <AccountCard
+              key={account.id}
               {...account}
               locale={user!.locale}
               setSelectedAccount={setSelectedAccount}

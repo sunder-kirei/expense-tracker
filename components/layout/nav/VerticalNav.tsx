@@ -1,10 +1,4 @@
-import {
-  BadgeIndianRupee,
-  ChartNoAxesCombined,
-  House,
-  Landmark,
-  UsersRound,
-} from "lucide-react";
+import { BadgeIndianRupee, House, Landmark, UsersRound } from "lucide-react";
 import { HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 import NavTile from "./NavTile";

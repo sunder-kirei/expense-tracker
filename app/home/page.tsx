@@ -1,49 +1,34 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { AppAreaChart } from "./components/trxChart/AppAreaChart";
-import { AppBarChart } from "./components/trxChart/AppBarChart";
-import { AppLineChart } from "./components/trxChart/AppLineChart";
-import {
-  useGetAccountsQuery,
-  useGetAccountsSummaryQuery,
-  useGetCategoriesSummaryQuery,
-  useGetTransactionsSummaryQuery,
-  useGetUserQuery,
-} from "@/store/services/api";
-import { SummaryInterface } from "@/schema/api/Summary.schema";
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { getAllInfoByISO } from "iso-country-currency";
-import { TrxSummary } from "@/types";
-import { CardTile } from "./components/CardTile";
-import { Separator } from "@/components/ui/separator";
+import { NoData } from "@/components/NoData";
+import { RangeDatePicker } from "@/components/RangeDatePicker";
 import {
   Select,
+  SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
-  SelectContent,
 } from "@/components/ui/select";
-import { $Enums } from "@prisma/client";
-import { AppPieChart } from "./components/categoryChart/AppPieChart";
 import {
-  ChartColumn,
-  ChartSpline,
+  useGetCategoriesSummaryQuery,
+  useGetTransactionsSummaryQuery,
+  useGetUserQuery,
+} from "@/store/services/api";
+import {
   ChartArea,
+  ChartColumn,
   ChartPie,
+  ChartSpline,
   Radar,
 } from "lucide-react";
+import { useState } from "react";
+import { CardTile } from "./components/CardTile";
+import { AppPieChart } from "./components/categoryChart/AppPieChart";
 import { AppRadarChart } from "./components/categoryChart/AppRadarChart";
-import { NoData } from "@/components/NoData";
-import { RangeDatePicker } from "@/components/RangeDatePicker";
+import { AppAreaChart } from "./components/trxChart/AppAreaChart";
+import { AppBarChart } from "./components/trxChart/AppBarChart";
+import { AppLineChart } from "./components/trxChart/AppLineChart";
 
 const defaultFrom = new Date();
 defaultFrom.setDate(1);

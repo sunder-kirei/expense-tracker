@@ -1,19 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
-import { VerticalNav } from "./VerticalNav";
 import { useState } from "react";
+import { VerticalNav } from "./VerticalNav";
 
 export function Drawer() {
   const [open, setOpen] = useState(false);

@@ -11,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Edit2, MoreHorizontal, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -24,18 +24,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import useConfirm from "@/hooks/useConfirm";
 import { DataTablePagination } from "./DataTablePagination";
 import { DataTableViewOptions } from "./DataTableViewOptions";
-import useConfirm from "@/hooks/useConfirm";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-} from "../ui/dropdown-menu";
-import Link from "next/link";
 
 interface Props<T> {
   columns: ColumnDef<T>[];

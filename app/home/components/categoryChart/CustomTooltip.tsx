@@ -1,7 +1,7 @@
 import { getAllInfoByISO } from "iso-country-currency";
 
 export function CustomTooltip(props: any) {
-  const { active, payload, label, locale } = props;
+  const { active, payload, locale } = props;
 
   const { symbol } = getAllInfoByISO(locale);
 

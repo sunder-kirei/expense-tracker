@@ -1,8 +1,7 @@
 import { auth } from "@/auth";
-import { accountSummary, categorySummary } from "@/lib/api/summary";
+import { categorySummary } from "@/lib/api/summary";
 import { prisma } from "@/prisma";
 import { SummarySchema } from "@/schema/api/Summary.schema";
-import { AccountExpenseSummary } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {

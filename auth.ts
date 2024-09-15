@@ -1,8 +1,8 @@
-import NextAuth from "next-auth";
-import Google from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/prisma";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import NextAuth from "next-auth";
 import type { Provider } from "next-auth/providers";
+import Google from "next-auth/providers/google";
 
 const providers: Provider[] = [Google];
 

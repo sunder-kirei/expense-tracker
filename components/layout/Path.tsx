@@ -18,7 +18,7 @@ export function Path({ className, ...props }: HTMLAttributes<HTMLElement>) {
   const pathSansRoot = path?.split("/").slice(1);
 
   return (
-    <Breadcrumb className={twMerge("capitalize", className)}>
+    <Breadcrumb className={twMerge("capitalize", className)} {...props}>
       <BreadcrumbList>
         {pathSansRoot?.map((pathPart, idx) => (
           <React.Fragment key={pathPart}>

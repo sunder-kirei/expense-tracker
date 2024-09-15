@@ -1,29 +1,18 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrxSummaryInterface } from "@/schema/api/Summary.schema";
-import {
-  useGetTransactionsSummaryQuery,
-  useGetUserQuery,
-} from "@/store/services/api";
+import { ChartTrxProps } from "@/types";
 import { format } from "date-fns";
-import { useState } from "react";
 import {
   Bar,
   BarChart,
-  CartesianGrid,
   Legend,
-  Line,
-  LineChart,
-  Rectangle,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
 import { CustomTooltip } from "./CustomTooltip";
-import { ChartTrxProps, GetUser, TrxSummary } from "@/types";
-import { User } from "@prisma/client";
 
 export function AppBarChart({ trx, user, loading }: ChartTrxProps) {
   return trx && user && !loading ? (

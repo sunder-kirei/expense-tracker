@@ -3,11 +3,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { CategoryProps } from "@/types";
 import {
-  Pie,
-  PieChart,
   PolarAngleAxis,
   PolarGrid,
-  PolarRadiusAxis,
   Radar,
   RadarChart,
   ResponsiveContainer,

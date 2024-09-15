@@ -2,9 +2,7 @@ import { auth } from "@/auth";
 import { accountSummary } from "@/lib/api/summary";
 import { prisma } from "@/prisma";
 import { SummarySchema } from "@/schema/api/Summary.schema";
-import { AccountExpenseSummary } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
-import { fromJSON } from "postcss";
 
 export async function GET(request: NextRequest) {
   try {

@@ -44,7 +44,7 @@ function getCountryAndSymbol(country?: Currency) {
 }
 
 export function EditUserForm({ user }: Props) {
-  const isoCodes = useMemo(() => getAllISOCodes(), [getAllISOCodes]);
+  const isoCodes = useMemo(() => getAllISOCodes(), []);
   const [patchUser] = usePatchUserMutation();
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -64,7 +64,7 @@ export function EditUserForm({ user }: Props) {
     setIsDisabled(true);
     toast.promise(patchUser({ locale, name }).unwrap(), {
       loading: "Updating profile...",
-      success: (data) => {
+      success: () => {
         return `Profile updated successfully😎`;
       },
       error: () => `Something went wrong🥲`,
@@ -153,7 +153,9 @@ export function EditUserForm({ user }: Props) {
             </FormItem>
           )}
         />
-        <Button type="submit">Edit</Button>
+        <Button type="submit" disabled={isDisabled}>
+          Edit
+        </Button>
       </form>
     </Form>
   );

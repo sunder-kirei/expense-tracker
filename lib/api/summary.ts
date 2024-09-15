@@ -1,6 +1,6 @@
 import { prisma } from "@/prisma";
 import { AccountExpenseSummary, CategorySummary, TrxSummary } from "@/types";
-import { $Enums, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import { normalizeDate } from "../date";
 import { generateRandomColor } from "../generateColor";
 
@@ -139,7 +139,7 @@ export async function transactionSummary(user: User, from: Date, to: Date) {
     count: Number(item.count),
   }));
 
-  let temp = from;
+  const temp = from;
   let currIdx = 0;
   const data = [] as TrxSummary[];
   while (temp <= to) {

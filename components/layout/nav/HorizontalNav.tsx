@@ -2,12 +2,6 @@ import { HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 import { UserBadge } from "./UserBadge";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
-import { VerticalNav } from "./VerticalNav";
-import { Menu } from "lucide-react";
 import Link from "next/link";
 import { Drawer } from "./Drawer";
 

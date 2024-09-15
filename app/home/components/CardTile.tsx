@@ -1,14 +1,13 @@
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { TrxSummary } from "@/types";
-import { Currency, getAllInfoByISO } from "iso-country-currency";
+import { getAllInfoByISO } from "iso-country-currency";
 import { HTMLAttributes } from "react";
 
 interface Props {
