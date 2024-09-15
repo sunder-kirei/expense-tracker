@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Path } from "@/components/layout/Path";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,7 +37,7 @@ export default function RootLayout({
       </head>
       <ProviderLayout>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased w-full`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased w-full max-w-screen-xl mx-auto`}
         >
           <VerticalNav className="fixed h-full sm:pt-20 pb-4 pl-2 w-48 bg-background" />
           <HorizontalNav className="sm:fixed border-b h-16 z-100 bg-background" />

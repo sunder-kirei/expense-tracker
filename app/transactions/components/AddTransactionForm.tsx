@@ -32,6 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -320,9 +321,7 @@ export function AddTransactionForm() {
               <FormItem className="flex flex-col gap-y-1 py-1.5 items-start">
                 <FormLabel>Category</FormLabel>
                 {!categories || categoryLoading ? (
-                  <div className="grid place-items-center p-4">
-                    <LoaderCircle className="animate-spin" />
-                  </div>
+                  <Skeleton className="border-md w-full h-9" />
                 ) : (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -407,9 +406,7 @@ export function AddTransactionForm() {
             <FormItem className="flex flex-col gap-y-1 py-1.5 items-start">
               <FormLabel>Account</FormLabel>
               {!accounts || accountLoading ? (
-                <div className="grid place-items-center p-4">
-                  <LoaderCircle className="animate-spin" />
-                </div>
+                <Skeleton className="border-md w-full h-9" />
               ) : (
                 <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
@@ -449,10 +446,7 @@ export function AddTransactionForm() {
                 </Select>
               )}
               <FormDescription>
-                <Link
-                  href="/profile/accounts/add"
-                  className="underline text-primary"
-                >
+                <Link href="/accounts/new" className="underline text-primary">
                   Add account
                 </Link>
               </FormDescription>

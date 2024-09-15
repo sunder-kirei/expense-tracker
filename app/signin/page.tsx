@@ -1,5 +1,6 @@
 import { signIn } from "@/auth";
 import { providerMap } from "@/auth.config";
+import { Page } from "@/components/layout/Page";
 import { PiggyBank } from "lucide-react";
 
 export default async function SignInPage({
@@ -8,9 +9,9 @@ export default async function SignInPage({
   searchParams: { [key: string]: string | undefined };
 }) {
   return (
-    <div className="flex flex-col gap-2 h-full items-center gap-y-8">
-      <div className="hero flex flex-col items-center">
-        <PiggyBank size={400} className="text-primary" />
+    <Page className="">
+      <div className="hero flex flex-col items-center w-max-[90%]">
+        <PiggyBank className="text-primary w-full h-full aspect-square max-w-[400px]" />
         <span className="-mt-8">
           Welcome to{" "}
           <span className="font-semibold text-accent text-2xl">
@@ -26,6 +27,7 @@ export default async function SignInPage({
               redirectTo: searchParams["callback"],
             });
           }}
+          className="self-center mt-8"
           key={provider.id}
         >
           <button className="gsi-material-button" type="submit">
@@ -65,6 +67,6 @@ export default async function SignInPage({
           </button>
         </form>
       ))}
-    </div>
+    </Page>
   );
 }
