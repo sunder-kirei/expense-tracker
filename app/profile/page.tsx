@@ -1,11 +1,10 @@
 "use client";
 
-import { Loader } from "@/components/layout/Loader";
 import UserAvatar from "@/components/layout/nav/UserAvatar";
-import { useGetUserQuery } from "@/store/services/api";
-import { EditUserForm } from "./components/EditUserForm";
 import { Page } from "@/components/layout/Page";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useGetUserQuery } from "@/store/services/api";
+import { EditUserForm } from "./components/EditUserForm";
 
 export default function ProfilePage() {
   const { data: user } = useGetUserQuery();

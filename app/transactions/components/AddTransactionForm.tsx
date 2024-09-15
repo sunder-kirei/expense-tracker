@@ -55,7 +55,6 @@ import {
   Check,
   ChevronsUpDown,
   CreditCard,
-  LoaderCircle,
   QrCode,
   Trash2,
 } from "lucide-react";

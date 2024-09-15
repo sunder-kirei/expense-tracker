@@ -1,6 +1,5 @@
 "use client";
 
-import { Loader } from "@/components/layout/Loader";
 import { DataTable } from "@/components/table/DataTable";
 import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader";
 import { Skeleton } from "@/components/ui/skeleton";

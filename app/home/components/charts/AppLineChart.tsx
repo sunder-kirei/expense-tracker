@@ -2,7 +2,6 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChartTrxProps } from "@/types";
-import { format } from "date-fns";
 import {
   Legend,
   Line,
@@ -12,8 +11,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { CustomTooltip } from "./CustomTooltip";
 import { twMerge } from "tailwind-merge";
+import { CustomTooltip } from "./CustomTooltip";
 
 export function AppLineChart({
   data,

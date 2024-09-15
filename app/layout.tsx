@@ -1,13 +1,10 @@
 import { HorizontalNav } from "@/components/layout/nav/HorizontalNav";
 import { VerticalNav } from "@/components/layout/nav/VerticalNav";
-import { Page } from "@/components/layout/Page";
 import ProviderLayout from "@/components/layout/ProviderLayout";
-import { Separator } from "@/components/ui/separator";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Path } from "@/components/layout/Path";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

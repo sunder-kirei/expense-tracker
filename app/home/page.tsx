@@ -1,5 +1,6 @@
 "use client";
 
+import { Page } from "@/components/layout/Page";
 import { NoData } from "@/components/NoData";
 import { RangeDatePicker } from "@/components/RangeDatePicker";
 import {
@@ -10,26 +11,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   useGetCategoriesSummaryQuery,
   useGetTransactionsSummaryQuery,
   useGetUserQuery,
 } from "@/store/services/api";
-import {
-  ChartArea,
-  ChartColumn,
-  ChartPie,
-  ChartSpline,
-  Radar,
-} from "lucide-react";
+import { format } from "date-fns";
+import { ChartArea, ChartColumn, ChartSpline } from "lucide-react";
 import { useState } from "react";
 import { CardTile } from "./components/CardTile";
 import { AppAreaChart } from "./components/charts/AppAreaChart";
 import { AppBarChart } from "./components/charts/AppBarChart";
 import { AppLineChart } from "./components/charts/AppLineChart";
-import { Page } from "@/components/layout/Page";
-import { format } from "date-fns";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const defaultFrom = new Date();
 defaultFrom.setDate(1);

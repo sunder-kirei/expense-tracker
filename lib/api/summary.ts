@@ -2,7 +2,6 @@ import { prisma } from "@/prisma";
 import { AccountExpenseSummary, CategorySummary, TrxSummary } from "@/types";
 import { User } from "@prisma/client";
 import { normalizeDate } from "../date";
-import { generateRandomColor } from "../generateColor";
 
 export async function accountSummary(user: User, from: Date, to: Date) {
   to.setDate(to.getDate() + 1);
