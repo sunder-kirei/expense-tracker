@@ -96,7 +96,7 @@ export default function AccountsPage() {
           </DialogContent>
         </Dialog>
       )}
-      {true || accountLoading || userLoading ? (
+      {accountLoading || userLoading ? (
         <div className="flex flex-col w-full h-fit gap-y-4">
           <Skeleton className="w-32 h-9 self-end" />
           <Skeleton className="w-full h-48" />
