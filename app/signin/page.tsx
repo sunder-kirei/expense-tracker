@@ -1,4 +1,5 @@
-import { providerMap, signIn } from "@/auth";
+import { signIn } from "@/auth";
+import { providerMap } from "@/auth.config";
 import { PiggyBank } from "lucide-react";
 
 export default async function SignInPage({
